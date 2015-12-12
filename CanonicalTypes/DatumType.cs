@@ -16,5 +16,6 @@ namespace CanonicalTypes
         Set,
         Dictionary,
         MutableBox,
+        Rational,
     }
 }

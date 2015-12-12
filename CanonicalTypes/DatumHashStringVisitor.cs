@@ -79,5 +79,10 @@ namespace CanonicalTypes
         {
             return "m" + d.ID;
         }
+
+        public string VisitRational(RationalDatum d)
+        {
+            return $"r{d.Value.Numerator}/{d.Value.Denominator}";
+        }
     }
 }

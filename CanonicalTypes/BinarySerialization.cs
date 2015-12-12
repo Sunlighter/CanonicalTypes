@@ -22,6 +22,7 @@ namespace CanonicalTypes
         private const byte B_SET = 10;
         private const byte B_DICTIONARY = 11;
         private const byte B_MUTABLE_BOX = 12;
+        private const byte B_RATIONAL = 13;
 
         private class BinaryWriteVisitor : IDatumVisitor<bool>
         {
@@ -72,9 +73,7 @@ namespace CanonicalTypes
             public bool VisitInt(IntDatum d)
             {
                 bw.Write(B_INT);
-                byte[] intBytes = d.Value.ToByteArray();
-                bw.Write(intBytes.Length);
-                bw.Write(intBytes);
+                bw.WriteBigInteger(d.Value);
                 return true;
             }
 
@@ -149,6 +148,14 @@ namespace CanonicalTypes
                 bw.Write(B_MUTABLE_BOX);
                 IntDatum id = (IntDatum)(mutableBoxMap[d]);
                 bw.Write((int)id.Value);
+                return true;
+            }
+
+            public bool VisitRational(RationalDatum d)
+            {
+                bw.Write(B_RATIONAL);
+                bw.WriteBigInteger(d.Value.Numerator);
+                bw.WriteBigInteger(d.Value.Denominator);
                 return true;
             }
         }
@@ -248,11 +255,8 @@ namespace CanonicalTypes
                         }
                     case B_INT:
                         {
-                            int nBytes = r.ReadInt32();
-                            byte[] buf = new byte[nBytes];
-                            int bytesRead = r.Read(buf, 0, nBytes);
-                            if (bytesRead != nBytes) throw new EndOfStreamException();
-                            return new IntDatum(new BigInteger(buf));
+                            BigInteger b = r.ReadBigInteger();
+                            return new IntDatum(b);
                         }
                     case B_FLOAT:
                         {
@@ -310,6 +314,12 @@ namespace CanonicalTypes
                             int index = r.ReadInt32();
                             return mutableBoxes[index];
                         }
+                    case B_RATIONAL:
+                        {
+                            BigInteger numerator = r.ReadBigInteger();
+                            BigInteger denominator = r.ReadBigInteger();
+                            return new RationalDatum(new BigRational(numerator, denominator));
+                        }
                     default:
                         throw new FormatException("Unknown type id");
                 }
@@ -345,6 +355,23 @@ namespace CanonicalTypes
                     return br.ReadDatum();
                 }
             }
+        }
+
+        public static void WriteBigInteger(this BinaryWriter bw, BigInteger b)
+        {
+            byte[] intBytes = b.ToByteArray();
+            bw.Write(intBytes.Length);
+            bw.Write(intBytes);
+        }
+
+        public static BigInteger ReadBigInteger(this BinaryReader br)
+        {
+
+            int nBytes = br.ReadInt32();
+            byte[] buf = new byte[nBytes];
+            int bytesRead = br.Read(buf, 0, nBytes);
+            if (bytesRead != nBytes) throw new EndOfStreamException();
+            return new BigInteger(buf);
         }
     }
 }

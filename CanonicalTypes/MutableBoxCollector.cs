@@ -115,5 +115,10 @@ namespace CanonicalTypes
                 return result;
             }
         }
+
+        public SetDatum VisitRational(RationalDatum d)
+        {
+            return SetDatum.Empty;
+        }
     }
 }

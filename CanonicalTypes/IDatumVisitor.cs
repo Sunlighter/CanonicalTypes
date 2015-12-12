@@ -16,5 +16,6 @@ namespace CanonicalTypes
         T VisitSet(SetDatum d);
         T VisitDictionary(DictionaryDatum d);
         T VisitMutableBox(MutableBoxDatum d);
+        T VisitRational(RationalDatum d);
     }
 }
