@@ -96,9 +96,31 @@ namespace CanonicalTypes
             return keys.Select(k => new JoinResult<Datum, Datum, Datum>(k, left[k], right[k]));
         }
 
+        public static IEnumerable<JoinResult<Datum, Datum, Nothing>> InnerJoin(DictionaryDatum left, SetDatum right)
+        {
+            SetDatum keys = SetDatum.Intersection(left.Keys, right);
+            return keys.Select(k => new JoinResult<Datum, Datum, Nothing>(k, left[k], Nothing.Value));
+        }
+
+        public static IEnumerable<JoinResult<Datum, Nothing, Datum>> InnerJoin(SetDatum left, DictionaryDatum right)
+        {
+            SetDatum keys = SetDatum.Intersection(left, right.Keys);
+            return keys.Select(k => new JoinResult<Datum, Nothing, Datum>(k, Nothing.Value, right[k]));
+        }
+
         public static IEnumerable<JoinResult<Datum, Datum, Option<Datum>>> LeftJoin(DictionaryDatum left, DictionaryDatum right)
         {
             return left.Keys.Select(k => new JoinResult<Datum, Datum, Option<Datum>>(k, left[k], right.TryGet(k)));
+        }
+
+        public static IEnumerable<JoinResult<Datum, Datum, bool>> LeftJoin(DictionaryDatum left, SetDatum right)
+        {
+            return left.Keys.Select(k => new JoinResult<Datum, Datum, bool>(k, left[k], right.Contains(k)));
+        }
+
+        public static IEnumerable<JoinResult<Datum, Nothing, Option<Datum>>> LeftJoin(SetDatum left, DictionaryDatum right)
+        {
+            return left.Select(k => new JoinResult<Datum, Nothing, Option<Datum>>(k, Nothing.Value, right.TryGet(k)));
         }
 
         public static IEnumerable<JoinResult<Datum, Option<Datum>, Datum>> RightJoin(DictionaryDatum left, DictionaryDatum right)
@@ -106,10 +128,32 @@ namespace CanonicalTypes
             return right.Keys.Select(k => new JoinResult<Datum, Option<Datum>, Datum>(k, left.TryGet(k), right[k]));
         }
 
+        public static IEnumerable<JoinResult<Datum, Option<Datum>, Nothing>> RightJoin(DictionaryDatum left, SetDatum right)
+        {
+            return right.Select(k => new JoinResult<Datum, Option<Datum>, Nothing>(k, left.TryGet(k), Nothing.Value));
+        }
+
+        public static IEnumerable<JoinResult<Datum, bool, Datum>> RightJoin(SetDatum left, DictionaryDatum right)
+        {
+            return right.Keys.Select(k => new JoinResult<Datum, bool, Datum>(k, left.Contains(k), right[k]));
+        }
+
         public static IEnumerable<JoinResult<Datum, Option<Datum>, Option<Datum>>> FullJoin(DictionaryDatum left, DictionaryDatum right)
         {
             SetDatum keys = SetDatum.Union(left.Keys, right.Keys);
             return keys.Select(k => new JoinResult<Datum, Option<Datum>, Option<Datum>>(k, left.TryGet(k), right.TryGet(k)));
+        }
+
+        public static IEnumerable<JoinResult<Datum, Option<Datum>, bool>> FullJoin(DictionaryDatum left, SetDatum right)
+        {
+            SetDatum keys = SetDatum.Union(left.Keys, right);
+            return keys.Select(k => new JoinResult<Datum, Option<Datum>, bool>(k, left.TryGet(k), right.Contains(k)));
+        }
+
+        public static IEnumerable<JoinResult<Datum, bool, Option<Datum>>> FullJoin(SetDatum left, DictionaryDatum right)
+        {
+            SetDatum keys = SetDatum.Union(left, right.Keys);
+            return keys.Select(k => new JoinResult<Datum, bool, Option<Datum>>(k, left.Contains(k), right.TryGet(k)));
         }
 
         private SetDatum GetKeys()

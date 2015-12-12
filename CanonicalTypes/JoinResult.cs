@@ -25,4 +25,9 @@ namespace CanonicalTypes
 
         public R Right { get { return right; } }
     }
+
+    public enum Nothing
+    {
+        Value,
+    }
 }

@@ -120,6 +120,22 @@ namespace CanonicalTypes
             return new SetDatum(idb.ToImmutable());
         }
 
+        public static IEnumerable<JoinResult<Datum, Nothing, bool>> LeftJoin(SetDatum left, SetDatum right)
+        {
+            return left.Select(k => new JoinResult<Datum, Nothing, bool>(k, Nothing.Value, right.Contains(k)));
+        }
+
+        public static IEnumerable<JoinResult<Datum, bool, Nothing>> RightJoin(SetDatum left, SetDatum right)
+        {
+            return right.Select(k => new JoinResult<Datum, bool, Nothing>(k, left.Contains(k), Nothing.Value));
+        }
+
+        public static IEnumerable<JoinResult<Datum, bool, bool>> FullJoin(SetDatum left, SetDatum right)
+        {
+            SetDatum keys = SetDatum.Union(left, right);
+            return keys.Select(k => new JoinResult<Datum, bool, bool>(k, left.Contains(k), right.Contains(k)));
+        }
+
         public IEnumerator<Datum> GetEnumerator()
         {
             return set.GetEnumerator();
