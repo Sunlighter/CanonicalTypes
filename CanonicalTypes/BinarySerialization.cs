@@ -257,6 +257,11 @@ namespace CanonicalTypes
                         return new BooleanDatum(false);
                     case B_BOOLEAN_TRUE:
                         return new BooleanDatum(true);
+                    case B_CHAR:
+                        {
+                            char ch = r.ReadChar();
+                            return new CharDatum(ch);
+                        }
                     case B_STRING:
                         {
                             string str = r.ReadString();
