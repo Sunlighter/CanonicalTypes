@@ -57,6 +57,7 @@
     <Compile Include="DatumType.cs" />
     <Compile Include="DictionaryDatum.cs" />
     <Compile Include="FloatDatum.cs" />
+    <Compile Include="GuidDatum.cs" />
     <Compile Include="IDatumVisitor.cs" />
     <Compile Include="IntDatum.cs" />
     <Compile Include="JoinResult.cs" />

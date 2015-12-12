@@ -17,5 +17,6 @@ namespace CanonicalTypes
         Dictionary,
         MutableBox,
         Rational,
+        Guid,
     }
 }

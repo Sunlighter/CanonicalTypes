@@ -19,40 +19,19 @@ namespace CanonicalTypes
             mutableBoxCollections = ImmutableDictionary<long, SetDatum>.Empty;
         }
 
-        public SetDatum VisitNull(NullDatum d)
-        {
-            return SetDatum.Empty;
-        }
+        public SetDatum VisitNull(NullDatum d) => SetDatum.Empty;
 
-        public SetDatum VisitBoolean(BooleanDatum d)
-        {
-            return SetDatum.Empty;
-        }
+        public SetDatum VisitBoolean(BooleanDatum d) => SetDatum.Empty;
 
-        public SetDatum VisitChar(CharDatum d)
-        {
-            return SetDatum.Empty;
-        }
+        public SetDatum VisitChar(CharDatum d) => SetDatum.Empty;
 
-        public SetDatum VisitString(StringDatum d)
-        {
-            return SetDatum.Empty;
-        }
+        public SetDatum VisitString(StringDatum d) => SetDatum.Empty;
 
-        public SetDatum VisitInt(IntDatum d)
-        {
-            return SetDatum.Empty;
-        }
+        public SetDatum VisitInt(IntDatum d) => SetDatum.Empty;
 
-        public SetDatum VisitFloat(FloatDatum d)
-        {
-            return SetDatum.Empty;
-        }
+        public SetDatum VisitFloat(FloatDatum d) => SetDatum.Empty;
 
-        public SetDatum VisitByteArray(ByteArrayDatum d)
-        {
-            return SetDatum.Empty;
-        }
+        public SetDatum VisitByteArray(ByteArrayDatum d) => SetDatum.Empty;
 
         public SetDatum VisitSymbol(SymbolDatum d)
         {
@@ -97,9 +76,8 @@ namespace CanonicalTypes
             }
         }
 
-        public SetDatum VisitRational(RationalDatum d)
-        {
-            return SetDatum.Empty;
-        }
+        public SetDatum VisitRational(RationalDatum d) => SetDatum.Empty;
+
+        public SetDatum VisitGuid(GuidDatum d) => SetDatum.Empty;
     }
 }

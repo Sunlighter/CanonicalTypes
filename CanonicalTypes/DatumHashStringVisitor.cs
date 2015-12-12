@@ -84,5 +84,10 @@ namespace CanonicalTypes
         {
             return $"r{d.Value.Numerator}/{d.Value.Denominator}";
         }
+
+        public string VisitGuid(GuidDatum d)
+        {
+            return "g" + d.Value.ToString("N");
+        }
     }
 }

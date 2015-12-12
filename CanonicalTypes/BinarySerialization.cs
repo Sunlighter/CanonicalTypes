@@ -23,6 +23,7 @@ namespace CanonicalTypes
         private const byte B_DICTIONARY = 11;
         private const byte B_MUTABLE_BOX = 12;
         private const byte B_RATIONAL = 13;
+        private const byte B_GUID = 14;
 
         private class BinaryWriteVisitor : IDatumVisitor<bool>
         {
@@ -156,6 +157,14 @@ namespace CanonicalTypes
                 bw.Write(B_RATIONAL);
                 bw.WriteBigInteger(d.Value.Numerator);
                 bw.WriteBigInteger(d.Value.Denominator);
+                return true;
+            }
+
+            public bool VisitGuid(GuidDatum d)
+            {
+                bw.Write(B_GUID);
+                byte[] buf = d.Value.ToByteArray();
+                bw.Write(buf, 0, 16);
                 return true;
             }
         }
@@ -319,6 +328,13 @@ namespace CanonicalTypes
                             BigInteger numerator = r.ReadBigInteger();
                             BigInteger denominator = r.ReadBigInteger();
                             return new RationalDatum(new BigRational(numerator, denominator));
+                        }
+                    case B_GUID:
+                        {
+                            byte[] buf = new byte[16];
+                            int bytesRead = r.Read(buf, 0, 16);
+                            if (bytesRead < 16) throw new EndOfStreamException();
+                            return new GuidDatum(new Guid(buf));
                         }
                     default:
                         throw new FormatException("Unknown type id");
