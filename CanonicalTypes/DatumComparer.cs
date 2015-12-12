@@ -136,6 +136,25 @@ namespace CanonicalTypes
             return 0;
         }
 
+        private int CompareRational(RationalDatum x, RationalDatum y)
+        {
+            if (x.Value < y.Value) return -1;
+            if (x.Value > y.Value) return 1;
+            return 0;
+        }
+
+        private int CompareGuid(GuidDatum x, GuidDatum y)
+        {
+            byte[] xb = x.Value.ToByteArray();
+            byte[] yb = y.Value.ToByteArray();
+            for(int i = 0; i < 16; ++i)
+            {
+                if (xb[i] < yb[i]) return -1;
+                if (xb[i] > yb[i]) return 1;
+            }
+            return 0;
+        }
+
         public int Compare(Datum x, Datum y)
         {
             if (x.DatumType < y.DatumType) return -1;
@@ -167,6 +186,10 @@ namespace CanonicalTypes
                     return CompareDictionary((DictionaryDatum)x, (DictionaryDatum)y);
                 case DatumType.MutableBox:
                     return CompareMutableBox((MutableBoxDatum)x, (MutableBoxDatum)y);
+                case DatumType.Rational:
+                    return CompareRational((RationalDatum)x, (RationalDatum)y);
+                case DatumType.Guid:
+                    return CompareGuid((GuidDatum)x, (GuidDatum)y);
                 default:
                     throw new ArgumentException("Unexpected DatumType");
             }

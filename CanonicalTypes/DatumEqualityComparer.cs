@@ -114,6 +114,16 @@ namespace CanonicalTypes
             return x.ID == y.ID;
         }
 
+        private bool EqualRational(RationalDatum x, RationalDatum y)
+        {
+            return x.Value == y.Value;
+        }
+
+        private bool EqualGuid(GuidDatum x, GuidDatum y)
+        {
+            return x.Value == y.Value;
+        }
+
         public bool Equals(Datum x, Datum y)
         {
             if (x.DatumType != y.DatumType) return false;
@@ -144,6 +154,10 @@ namespace CanonicalTypes
                     return EqualDictionary((DictionaryDatum)x, (DictionaryDatum)y);
                 case DatumType.MutableBox:
                     return EqualMutableBox((MutableBoxDatum)x, (MutableBoxDatum)y);
+                case DatumType.Rational:
+                    return EqualRational((RationalDatum)x, (RationalDatum)y);
+                case DatumType.Guid:
+                    return EqualGuid((GuidDatum)x, (GuidDatum)y);
                 default:
                     throw new ArgumentException();
             }
