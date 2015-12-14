@@ -102,10 +102,10 @@ namespace CanonicalTypesTest
                     d => DatumEqualityComparer.Instance.Equals(d, complexList),
                     null
                 ),
-                " ( #t #nil #f (#t #f) )"
+                " ( #t #nil #f\r\n (#t #f) )"
             );
 
-            Assert.AreEqual("{ success, pos = 0, len = 23, value = True }", formatBoolResult(result));
+            Assert.AreEqual("{ success, pos = 0, len = 25, value = True }", formatBoolResult(result));
         }
     }
 }
