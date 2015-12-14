@@ -213,7 +213,6 @@ namespace CanonicalTypes.Parsing
             public ParseResult<ImmutableList<T>> TryParse(CharParserContext context, int off, int len)
             {
                 int pos = off;
-                int lenRemain = len;
                 ImmutableList<T> results = ImmutableList<T>.Empty;
                 foreach (ICharParser<T> subParser in subParsers)
                 {
@@ -223,7 +222,6 @@ namespace CanonicalTypes.Parsing
                     {
                         var subSuccess = (ParseSuccess<T>)subResult;
                         pos += subSuccess.Length;
-                        lenRemain -= subSuccess.Length;
                         results = results.Add(subSuccess.Value);
                     }
                     else

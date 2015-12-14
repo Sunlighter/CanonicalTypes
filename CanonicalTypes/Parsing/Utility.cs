@@ -18,6 +18,5 @@ namespace CanonicalTypes.Parsing
 
             return true;
         }
-
     }
 }

@@ -54,6 +54,8 @@ namespace CanonicalTypes.Parsing
             if (pos > other.pos) return 1;
             if (len < other.len) return -1;
             if (len > other.len) return 1;
+            if (id < other.id) return -1;
+            if (id > other.id) return 1;
             return 0;
         }
 

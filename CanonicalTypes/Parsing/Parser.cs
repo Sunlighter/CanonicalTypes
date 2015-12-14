@@ -51,6 +51,11 @@ namespace CanonicalTypes.Parsing
             );
         }
 
+        public static ICharParser<object> ResultToObject<T>(this ICharParser<T> parser)
+        {
+            return CharParserBuilder.ParseConvert(parser, x => (object)x, null);
+        }
+
         private static Lazy<ICharParser<Datum>> parseNull = new Lazy<ICharParser<Datum>>(BuildParseNull, LazyThreadSafetyMode.ExecutionAndPublication);
 
         private static ICharParser<Datum> BuildParseNull()
@@ -59,21 +64,92 @@ namespace CanonicalTypes.Parsing
             (
                 CharParserBuilder.ParseExact
                 (
-                    "#null",
+                    "#nil",
                     StringComparison.InvariantCulture
                 ),
                 _ => (Datum)NullDatum.Value,
-                "null conversion failed"
+                null
             ).WithOptionalLeadingWhiteSpace();
         }
 
         public static ICharParser<Datum> ParseNull => parseNull.Value;
 
+        private static Lazy<ICharParser<Datum>> parseFalse = new Lazy<ICharParser<Datum>>(BuildParseFalse, LazyThreadSafetyMode.ExecutionAndPublication);
+
+        private static ICharParser<Datum> BuildParseFalse()
+        {
+            return CharParserBuilder.ParseConvert
+            (
+                CharParserBuilder.ParseExact
+                (
+                    "#f",
+                    StringComparison.InvariantCulture
+                ),
+                _ => (Datum)(BooleanDatum.False),
+                null
+            ).WithOptionalLeadingWhiteSpace();
+        }
+
+        public static ICharParser<Datum> ParseFalse => parseFalse.Value;
+
+        private static Lazy<ICharParser<Datum>> parseTrue = new Lazy<ICharParser<Datum>>(BuildParseTrue, LazyThreadSafetyMode.ExecutionAndPublication);
+
+        private static ICharParser<Datum> BuildParseTrue()
+        {
+            return CharParserBuilder.ParseConvert
+            (
+                CharParserBuilder.ParseExact
+                (
+                    "#t",
+                    StringComparison.InvariantCulture
+                ),
+                _ => (Datum)(BooleanDatum.True),
+                null
+            ).WithOptionalLeadingWhiteSpace();
+        }
+
+        public static ICharParser<Datum> ParseTrue => parseTrue.Value;
+
+        public static ICharParser<ImmutableList<T>> BuildListParser<T>(ICharParser<T> itemParser)
+        {
+            return CharParserBuilder.ParseConvert
+            (
+                CharParserBuilder.ParseSequence
+                (
+                    new ICharParser<object>[]
+                    {
+                        CharParserBuilder.ParseExact("(", StringComparison.InvariantCulture).WithOptionalLeadingWhiteSpace().ResultToObject(),
+                        CharParserBuilder.ParseOptRep(itemParser.WithOptionalLeadingWhiteSpace(), true, true).ResultToObject(),
+                        CharParserBuilder.ParseExact(")", StringComparison.InvariantCulture).WithOptionalLeadingWhiteSpace().ResultToObject(),
+                    }
+                    .ToImmutableList()
+                ),
+                objs => (ImmutableList<T>)(objs[1]),
+                null
+            );
+        }
+
         private static Lazy<ICharParser<Datum>> parseDatum = new Lazy<ICharParser<Datum>>(BuildParseDatum, LazyThreadSafetyMode.ExecutionAndPublication);
 
         private static ICharParser<Datum> BuildParseDatum()
         {
-            throw new NotImplementedException();
+            ICharParser<Datum> parseDatum = CharParserBuilder.GetParseVariable<Datum>();
+
+            ICharParser<Datum> p0 = CharParserBuilder.ParseAlternatives
+            (
+                new[]
+                {
+                    ParseNull,
+                    ParseFalse,
+                    ParseTrue,
+                    CharParserBuilder.ParseConvert(BuildListParser(parseDatum), lst => (Datum)(new ListDatum(lst)), null),
+                }
+                .ToImmutableList()
+            );
+
+            CharParserBuilder.SetParseVariable(parseDatum, p0);
+
+            return p0;
         }
 
         public static ICharParser<Datum> ParseDatum => parseDatum.Value;

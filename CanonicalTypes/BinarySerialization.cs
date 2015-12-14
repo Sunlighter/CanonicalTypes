@@ -254,9 +254,9 @@ namespace CanonicalTypes
                     case B_NULL:
                         return NullDatum.Value;
                     case B_BOOLEAN_FALSE:
-                        return new BooleanDatum(false);
+                        return BooleanDatum.False;
                     case B_BOOLEAN_TRUE:
-                        return new BooleanDatum(true);
+                        return BooleanDatum.True;
                     case B_CHAR:
                         {
                             char ch = r.ReadChar();

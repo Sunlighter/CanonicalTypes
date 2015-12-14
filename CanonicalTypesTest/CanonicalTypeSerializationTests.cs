@@ -16,7 +16,7 @@ namespace CanonicalTypesTest
 
             Datum d1 = ListDatum.Empty
                 .Add(new IntDatum(100))
-                .Add(new BooleanDatum(true))
+                .Add(BooleanDatum.True)
                 .Add(m1);
 
             Datum d2 = DictionaryDatum.Empty
