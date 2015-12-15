@@ -146,6 +146,11 @@ namespace CanonicalTypes.Parsing
 
         #endregion
 
+        private static ICharParser<object> Token(string tokenStr)
+        {
+            return CharParserBuilder.ParseExact(tokenStr, StringComparison.InvariantCulture).WithOptionalLeadingWhiteSpace().ResultToObject();
+        }
+
         public static ICharParser<ImmutableList<T>> BuildListParser<T>(ICharParser<T> itemParser)
         {
             return CharParserBuilder.ParseConvert
@@ -154,13 +159,93 @@ namespace CanonicalTypes.Parsing
                 (
                     new ICharParser<object>[]
                     {
-                        CharParserBuilder.ParseExact("(", StringComparison.InvariantCulture).WithOptionalLeadingWhiteSpace().ResultToObject(),
+                        Token("("),
                         CharParserBuilder.ParseOptRep(itemParser.WithOptionalLeadingWhiteSpace(), true, true).ResultToObject(),
-                        CharParserBuilder.ParseExact(")", StringComparison.InvariantCulture).WithOptionalLeadingWhiteSpace().ResultToObject(),
+                        Token(")"),
                     }
                     .ToImmutableList()
                 ),
                 objs => (ImmutableList<T>)(objs[1]),
+                null
+            );
+        }
+
+        public static ICharParser<TDict> BuildDictionaryParser<TKey, TValue, TDict>
+        (
+            ICharParser<TKey> keyParser,
+            ICharParser<TValue> valueParser,
+            TDict empty,
+            Func<TDict, TKey, TValue, TDict> addItem
+        )
+        {
+            ICharParser<Tuple<TKey, TValue>> kvp = CharParserBuilder.ParseConvert
+            (
+                CharParserBuilder.ParseSequence
+                (
+                    new ICharParser<object>[]
+                    {
+                        keyParser.ResultToObject(),
+                        Token("=>"),
+                        valueParser.ResultToObject(),
+                    }
+                    .ToImmutableList()
+                ),
+                objs => new Tuple<TKey, TValue>((TKey)objs[0], (TValue)objs[2]),
+                null
+            );
+
+            var dict = CharParserBuilder.ParseSequence
+            (
+                new ICharParser<object>[]
+                {
+                    Token("{"),
+                    CharParserBuilder.ParseOptRep
+                    (
+                        CharParserBuilder.ParseConvert
+                        (
+                            CharParserBuilder.ParseSequence
+                            (
+                                new ICharParser<object>[]
+                                {
+                                    kvp.ResultToObject(),
+                                    Token(",")
+                                }
+                                .ToImmutableList()
+                            ),
+                            lst => (Tuple<TKey, TValue>)lst[0],
+                            null
+                        ),
+                        true,
+                        true
+                    )
+                    .ResultToObject(),
+                    CharParserBuilder.ParseOptRep
+                    (
+                        kvp,
+                        true,
+                        false
+                    )
+                    .ResultToObject(),
+                    Token("}"),
+                }
+                .ToImmutableList()
+            );
+
+            return CharParserBuilder.ParseConvert
+            (
+                dict,
+                objs =>
+                {
+                    ImmutableList<Tuple<TKey, TValue>> l1 = (ImmutableList<Tuple<TKey, TValue>>)objs[1];
+                    ImmutableList<Tuple<TKey, TValue>> l2 = (ImmutableList<Tuple<TKey, TValue>>)objs[2];
+
+                    TDict v = empty;
+                    foreach(Tuple<TKey, TValue> kvp0 in l1.Concat(l2))
+                    {
+                        v = addItem(v, kvp0.Item1, kvp0.Item2);
+                    }
+                    return v;
+                },
                 null
             );
         }
@@ -179,6 +264,7 @@ namespace CanonicalTypes.Parsing
                     ParseFalse,
                     ParseTrue,
                     CharParserBuilder.ParseConvert(BuildListParser(parseDatum), lst => (Datum)(new ListDatum(lst)), null),
+                    CharParserBuilder.ParseConvert(BuildDictionaryParser(parseDatum, parseDatum, DictionaryDatum.Empty, (d, k, v) => d.Add(k, v)), dict => (Datum)dict, null),
                 }
                 .ToImmutableList()
             );

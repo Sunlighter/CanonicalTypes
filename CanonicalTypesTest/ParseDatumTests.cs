@@ -107,5 +107,32 @@ namespace CanonicalTypesTest
 
             Assert.AreEqual("{ success, pos = 0, len = 25, value = True }", formatBoolResult(result));
         }
+
+        [TestMethod]
+        public void ParseComplexDictionary()
+        {
+            Datum complexDictionary = DictionaryDatum.FromEnumerable
+            (
+                new Tuple<Datum, Datum>[]
+                {
+                    new Tuple<Datum, Datum>(BooleanDatum.True, BooleanDatum.False),
+                    new Tuple<Datum, Datum>(NullDatum.Value, BooleanDatum.True),
+                    new Tuple<Datum, Datum>(new ListDatum(new Datum[] { BooleanDatum.True, BooleanDatum.False }.ToImmutableList()), NullDatum.Value),
+                }
+            );
+
+            var result = CharParserContext.TryParse
+            (
+                CharParserBuilder.ParseConvert
+                (
+                    parseDatum,
+                    d => DatumEqualityComparer.Instance.Equals(d, complexDictionary),
+                    null
+                ),
+                " { #t => #f, #nil => #t, (#t #f) => #nil }"
+            );
+
+            Assert.AreEqual("{ success, pos = 0, len = 42, value = True }", formatBoolResult(result));
+        }
     }
 }
