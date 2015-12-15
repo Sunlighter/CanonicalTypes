@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
 
 namespace CanonicalTypes.Parsing
 {
@@ -29,7 +30,7 @@ namespace CanonicalTypes.Parsing
 
         public static ICharParser<Nothing> ParseOptionalWhiteSpace => optionalWhiteSpace.Value;
 
-        public static ICharParser<T> WithOptionalLeadingWhiteSpace<T>(this ICharParser<T> parser)
+        private static ICharParser<T> WithOptionalLeadingWhiteSpace_Internal<T>(this ICharParser<T> parser)
         {
             return CharParserBuilder.ParseConvert
             (
@@ -51,10 +52,35 @@ namespace CanonicalTypes.Parsing
             );
         }
 
+        private static object olwsSyncRoot = new object();
+        private static ConditionalWeakTable<object, object> olwsDict = new ConditionalWeakTable<object, object>();
+
+        public static ICharParser<T> WithOptionalLeadingWhiteSpace<T>(this ICharParser<T> parser)
+        {
+            lock(olwsSyncRoot)
+            {
+                object result;
+                bool hasResult = olwsDict.TryGetValue(parser, out result);
+                if (hasResult)
+                {
+                    return (ICharParser<T>)result;
+                }
+                else
+                {
+                    result = WithOptionalLeadingWhiteSpace_Internal<T>(parser);
+                    olwsDict.Add(parser, result);
+                    olwsDict.Add(result, result);
+                    return (ICharParser<T>)result;
+                }
+            }
+        }
+
         public static ICharParser<object> ResultToObject<T>(this ICharParser<T> parser)
         {
             return CharParserBuilder.ParseConvert(parser, x => (object)x, null);
         }
+
+        #region ParseNull
 
         private static Lazy<ICharParser<Datum>> parseNull = new Lazy<ICharParser<Datum>>(BuildParseNull, LazyThreadSafetyMode.ExecutionAndPublication);
 
@@ -74,6 +100,10 @@ namespace CanonicalTypes.Parsing
 
         public static ICharParser<Datum> ParseNull => parseNull.Value;
 
+        #endregion
+
+        #region ParseFalse
+
         private static Lazy<ICharParser<Datum>> parseFalse = new Lazy<ICharParser<Datum>>(BuildParseFalse, LazyThreadSafetyMode.ExecutionAndPublication);
 
         private static ICharParser<Datum> BuildParseFalse()
@@ -92,6 +122,10 @@ namespace CanonicalTypes.Parsing
 
         public static ICharParser<Datum> ParseFalse => parseFalse.Value;
 
+        #endregion
+
+        #region ParseTrue
+
         private static Lazy<ICharParser<Datum>> parseTrue = new Lazy<ICharParser<Datum>>(BuildParseTrue, LazyThreadSafetyMode.ExecutionAndPublication);
 
         private static ICharParser<Datum> BuildParseTrue()
@@ -109,6 +143,8 @@ namespace CanonicalTypes.Parsing
         }
 
         public static ICharParser<Datum> ParseTrue => parseTrue.Value;
+
+        #endregion
 
         public static ICharParser<ImmutableList<T>> BuildListParser<T>(ICharParser<T> itemParser)
         {

@@ -71,7 +71,6 @@ namespace CanonicalTypesTest
             Assert.AreEqual("{ success, pos = 0, len = 3, value = True }", formatBoolResult(result));
         }
 
-
         [TestMethod]
         public void ParseComplexList()
         {
@@ -91,7 +90,8 @@ namespace CanonicalTypesTest
                         }
                         .ToImmutableList()
                     )
-                }.ToImmutableList()
+                }
+                .ToImmutableList()
             );
 
             var result = CharParserContext.TryParse
