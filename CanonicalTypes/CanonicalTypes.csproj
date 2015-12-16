@@ -72,7 +72,7 @@
     <Compile Include="Parsing\ICharParser.cs" />
     <Compile Include="Parsing\Parser.cs" />
     <Compile Include="Parsing\ParseResult.cs" />
-    <Compile Include="Parsing\PosLen.cs" />
+    <Compile Include="Parsing\PosLenId.cs" />
     <Compile Include="Parsing\Utility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RationalDatum.cs" />
