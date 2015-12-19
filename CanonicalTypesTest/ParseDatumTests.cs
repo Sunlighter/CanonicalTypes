@@ -85,7 +85,7 @@ namespace CanonicalTypesTest
                 {
                     BooleanDatum.True,
                     NullDatum.Value,
-                    BooleanDatum.False,
+                    new FloatDatum(-3.75),
                     new ListDatum
                     (
                         new Datum[]
@@ -107,10 +107,10 @@ namespace CanonicalTypesTest
                     d => DatumEqualityComparer.Instance.Equals(d, complexList),
                     null
                 ),
-                " ( #t #nil #f\r\n (#t #f) )"
+                " ( #t #nil -3.75\r\n (#t #f) )"
             );
 
-            Assert.AreEqual("{ success, pos = 0, len = 25, value = True }", formatBoolResult(result));
+            Assert.AreEqual("{ success, pos = 0, len = 28, value = True }", formatBoolResult(result));
         }
 
         [TestMethod]

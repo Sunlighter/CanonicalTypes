@@ -396,6 +396,7 @@ namespace CanonicalTypes.Parsing
                     ParseFalse,
                     ParseTrue,
                     CharParserBuilder.ParseConvert(ParseBigInteger, b => (Datum)(new IntDatum(b)), null),
+                    CharParserBuilder.ParseConvert(ParseDouble, d => (Datum)(new FloatDatum(d)), null),
                     CharParserBuilder.ParseConvert(BuildListParser(parseDatum), lst => (Datum)(new ListDatum(lst)), null),
                     CharParserBuilder.ParseConvert(BuildDictionaryParser(parseDatum, parseDatum, DictionaryDatum.Empty, (d, k, v) => d.Add(k, v)), dict => (Datum)dict, null),
                 }
