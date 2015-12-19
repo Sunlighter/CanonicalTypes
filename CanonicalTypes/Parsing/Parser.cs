@@ -284,10 +284,101 @@ namespace CanonicalTypes.Parsing
                     else return Option<BigInteger>.None;
                 },
                 "Failed to parse integer"
-            ).WithOptionalLeadingWhiteSpace();
+            )
+            .WithOptionalLeadingWhiteSpace();
         }
 
         public static ICharParser<BigInteger> ParseBigInteger => parseBigInteger.Value;
+
+        #endregion
+
+        #region Parse Double (Decimal)
+
+        private static Lazy<ICharParser<double>> parseDouble = new Lazy<ICharParser<double>>(BuildParseDouble, LazyThreadSafetyMode.ExecutionAndPublication);
+
+        private static ICharParser<double> BuildParseDouble()
+        {
+            Func<string, string, ICharParser<string>> regex = delegate (string str, string errorMessage)
+            {
+                return CharParserBuilder.ParseConvert
+                (
+                    CharParserBuilder.ParseFromRegex
+                    (
+                        new Regex(str, RegexOptions.Compiled | RegexOptions.ExplicitCapture),
+                        errorMessage
+                    ),
+                    match => match.Value,
+                    errorMessage
+                );
+            };
+
+            var intPart = regex
+            (
+                "\\G-?(?:0(?![0-9])|(?:[1-9][0-9]*))(?=[\\.eE])",
+                "Failed to parse float (int part)"
+            );
+
+            var fracPart = regex
+            (
+                "\\G\\.[0-9]*",
+                "Failed to parse float (frac part)"
+            );
+
+            var exptPart = regex
+            (
+                "\\G[Ee](\\+|-)?[1-9][0-9]*",
+                "Failed to parse float (expt part)"
+            );
+
+            return CharParserBuilder.ParseTryConvert
+            (
+                CharParserBuilder.ParseSequence
+                (
+                    new ICharParser<string>[]
+                    {
+                        intPart,
+                        CharParserBuilder.ParseAlternatives
+                        (
+                            new ICharParser<string>[]
+                            {
+                                CharParserBuilder.ParseConvert
+                                (
+                                    CharParserBuilder.ParseSequence
+                                    (
+                                        new ICharParser<string>[]
+                                        {
+                                            fracPart,
+                                            exptPart,
+                                        }
+                                        .ToImmutableList()
+                                    ),
+                                    list => string.Join(string.Empty, list),
+                                    "Failed to parse float (frac expt sequence)"
+                                ),
+                                fracPart,
+                                exptPart,
+                            }
+                            .ToImmutableList()
+                        )
+                    }
+                    .ToImmutableList()
+
+                ),
+                list2 =>
+                {
+                    string str = string.Join(string.Empty, list2);
+                    double val;
+                    if (double.TryParse(str, out val))
+                    {
+                        return Option<double>.Some(val);
+                    }
+                    else return Option<double>.None;
+                },
+                "Failed to parse float (conversion)"
+            );
+        }
+
+        public static ICharParser<double> ParseDouble => parseDouble.Value;
 
         #endregion
 

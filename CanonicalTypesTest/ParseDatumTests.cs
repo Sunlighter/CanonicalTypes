@@ -14,13 +14,15 @@ namespace CanonicalTypesTest
         private ICharParser<Datum> parseDatum;
         private Func<ParseResult<bool>, string> formatBoolResult;
         private Func<ParseResult<BigInteger>, string> formatBigIntegerResult;
+        private Func<ParseResult<double>, string> formatDoubleResult;
 
         public ParseDatumTests()
         {
             parseNull = Parser.ParseNull;
             parseDatum = Parser.ParseDatum;
             formatBoolResult = Utility.GetParseResultStringConverter<bool>(b => b.ToString());
-            formatBigIntegerResult = Utility.GetParseResultStringConverter<BigInteger>(b => b.ToString());
+            formatBigIntegerResult = Utility.GetParseResultStringConverter<BigInteger>(b => b.ToString(System.Globalization.NumberFormatInfo.InvariantInfo));
+            formatDoubleResult = Utility.GetParseResultStringConverter<double>(d => d.ToString(System.Globalization.NumberFormatInfo.InvariantInfo));
         }
 
         [TestMethod]
@@ -184,6 +186,54 @@ namespace CanonicalTypesTest
             );
 
             Assert.AreEqual("{ failure, { pos = 0, message = \"Failed to parse integer\" } }", formatBigIntegerResult(result));
+        }
+
+        [TestMethod]
+        public void ParseDouble()
+        {
+            var result = CharParserContext.TryParse
+            (
+                Parser.ParseDouble,
+                "6.125"
+            );
+
+            Assert.AreEqual("{ success, pos = 0, len = 5, value = 6.125 }", formatDoubleResult(result));
+        }
+
+        [TestMethod]
+        public void ParseNotDoubleButRational()
+        {
+            var result = CharParserContext.TryParse
+            (
+                Parser.ParseDouble,
+                "1/3"
+            );
+
+            Assert.AreEqual("{ failure, { pos = 0, message = \"Failed to parse float (int part)\" } }", formatDoubleResult(result));
+        }
+
+        [TestMethod]
+        public void ParseNotDoubleButInteger()
+        {
+            var result = CharParserContext.TryParse
+            (
+                Parser.ParseDouble,
+                "10000000"
+            );
+
+            Assert.AreEqual("{ failure, { pos = 0, message = \"Failed to parse float (int part)\" } }", formatDoubleResult(result));
+        }
+
+        [TestMethod]
+        public void ParseDoubleWithExponent()
+        {
+            var result = CharParserContext.TryParse
+            (
+                Parser.ParseDouble,
+                "1.5e+24"
+            );
+
+            Assert.AreEqual("{ success, pos = 0, len = 7, value = 1.5E+24 }", formatDoubleResult(result));
         }
     }
 }
