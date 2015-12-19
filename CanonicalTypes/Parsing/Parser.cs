@@ -13,6 +13,8 @@ namespace CanonicalTypes.Parsing
 {
     public static class Parser
     {
+        #region Optional White Space
+
         private static Lazy<ICharParser<Nothing>> optionalWhiteSpace = new Lazy<ICharParser<Nothing>>(BuildOptionalWhiteSpace, LazyThreadSafetyMode.ExecutionAndPublication);
 
         private static ICharParser<Nothing> BuildOptionalWhiteSpace()
@@ -30,6 +32,8 @@ namespace CanonicalTypes.Parsing
         }
 
         public static ICharParser<Nothing> ParseOptionalWhiteSpace => optionalWhiteSpace.Value;
+
+        #endregion
 
         private static ICharParser<T> WithOptionalLeadingWhiteSpace_Internal<T>(this ICharParser<T> parser)
         {
@@ -253,9 +257,9 @@ namespace CanonicalTypes.Parsing
             );
         }
 
-        private static Lazy<ICharParser<BigInteger>> parseBigInteger = new Lazy<ICharParser<BigInteger>>(BuildParseBigInteger, LazyThreadSafetyMode.ExecutionAndPublication);
+        #region Parse BigInteger (Decimal)
 
-        public static ICharParser<BigInteger> ParseBigInteger => parseBigInteger.Value;
+        private static Lazy<ICharParser<BigInteger>> parseBigInteger = new Lazy<ICharParser<BigInteger>>(BuildParseBigInteger, LazyThreadSafetyMode.ExecutionAndPublication);
 
         private static ICharParser<BigInteger> BuildParseBigInteger()
         {
@@ -282,6 +286,10 @@ namespace CanonicalTypes.Parsing
                 "Failed to parse integer"
             ).WithOptionalLeadingWhiteSpace();
         }
+
+        public static ICharParser<BigInteger> ParseBigInteger => parseBigInteger.Value;
+
+        #endregion
 
         private static Lazy<ICharParser<Datum>> parseDatum = new Lazy<ICharParser<Datum>>(BuildParseDatum, LazyThreadSafetyMode.ExecutionAndPublication);
 
