@@ -53,6 +53,8 @@ namespace CanonicalTypes.Parsing
             );
         }
 
+        // olws stands for Optional Leading White Space.
+
         private static object olwsSyncRoot = new object();
         private static ConditionalWeakTable<object, object> olwsDict = new ConditionalWeakTable<object, object>();
 
