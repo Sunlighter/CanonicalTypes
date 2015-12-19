@@ -122,7 +122,7 @@ namespace CanonicalTypesTest
                 {
                     new Tuple<Datum, Datum>(BooleanDatum.True, BooleanDatum.False),
                     new Tuple<Datum, Datum>(NullDatum.Value, new IntDatum(1000)),
-                    new Tuple<Datum, Datum>(new ListDatum(new Datum[] { BooleanDatum.True, BooleanDatum.False }.ToImmutableList()), NullDatum.Value),
+                    new Tuple<Datum, Datum>(new ListDatum(new Datum[] { BooleanDatum.True, BooleanDatum.False }.ToImmutableList()), new SymbolDatum("blah")),
                 }
             );
 
@@ -134,7 +134,7 @@ namespace CanonicalTypesTest
                     d => DatumEqualityComparer.Instance.Equals(d, complexDictionary),
                     null
                 ),
-                " { #t => #f, #nil => 1000, (#t #f) => #nil }"
+                " { #t => #f, #nil => 1000, (#t #f) => blah }"
             );
 
             Assert.AreEqual("{ success, pos = 0, len = 44, value = True }", formatBoolResult(result));
@@ -234,6 +234,143 @@ namespace CanonicalTypesTest
             );
 
             Assert.AreEqual("{ success, pos = 0, len = 7, value = 1.5E+24 }", formatDoubleResult(result));
+        }
+
+        [TestMethod]
+        public void ParseQuotedSymbol()
+        {
+            var result = CharParserContext.TryParse
+            (
+                 CharParserBuilder.ParseConvert
+                 (
+                     Parser.ParseQuotedSymbol,
+                     s => string.Compare(s, "a b", StringComparison.InvariantCulture) == 0,
+                     "failed to test string"
+                 ),
+                 "|a b|"
+            );
+
+            Assert.AreEqual("{ success, pos = 0, len = 5, value = True }", formatBoolResult(result));
+        }
+
+        [TestMethod]
+        public void ParseQuotedSymbolWithHexEscape()
+        {
+            var result = CharParserContext.TryParse
+            (
+                 CharParserBuilder.ParseConvert
+                 (
+                     Parser.ParseQuotedSymbol,
+                     s => string.Compare(s, "a bA", StringComparison.InvariantCulture) == 0,
+                     "failed to test string"
+                 ),
+                 "|a b\\x41|"
+            );
+
+            Assert.AreEqual("{ success, pos = 0, len = 9, value = True }", formatBoolResult(result));
+        }
+
+        [TestMethod]
+        public void ParseQuotedSymbolWithUnicodeEscape()
+        {
+            var result = CharParserContext.TryParse
+            (
+                 CharParserBuilder.ParseConvert
+                 (
+                     Parser.ParseQuotedSymbol,
+                     s => string.Compare(s, "a b•", StringComparison.InvariantCulture) == 0,
+                     "failed to test string"
+                 ),
+                 "|a b\\U2022|"
+            );
+
+            Assert.AreEqual("{ success, pos = 0, len = 11, value = True }", formatBoolResult(result));
+        }
+
+        [TestMethod]
+        public void ParseQuotedSymbolWithEscapedBar()
+        {
+            var result = CharParserContext.TryParse
+            (
+                 CharParserBuilder.ParseConvert
+                 (
+                     Parser.ParseQuotedSymbol,
+                     s => string.Compare(s, "|", StringComparison.InvariantCulture) == 0,
+                     "failed to test string"
+                 ),
+                 "|\\||"
+            );
+
+            Assert.AreEqual("{ success, pos = 0, len = 4, value = True }", formatBoolResult(result));
+        }
+
+        [TestMethod]
+        public void ParseString()
+        {
+            var result = CharParserContext.TryParse
+            (
+                 CharParserBuilder.ParseConvert
+                 (
+                     Parser.ParseString,
+                     s => string.Compare(s, "a b", StringComparison.InvariantCulture) == 0,
+                     "failed to test string"
+                 ),
+                 "\"a b\""
+            );
+
+            Assert.AreEqual("{ success, pos = 0, len = 5, value = True }", formatBoolResult(result));
+        }
+
+        [TestMethod]
+        public void ParseStringWithHexEscape()
+        {
+            var result = CharParserContext.TryParse
+            (
+                 CharParserBuilder.ParseConvert
+                 (
+                     Parser.ParseString,
+                     s => string.Compare(s, "a bA", StringComparison.InvariantCulture) == 0,
+                     "failed to test string"
+                 ),
+                 "\"a b\\x41\""
+            );
+
+            Assert.AreEqual("{ success, pos = 0, len = 9, value = True }", formatBoolResult(result));
+        }
+
+        [TestMethod]
+        public void ParseStringWithUnicodeEscape()
+        {
+            var result = CharParserContext.TryParse
+            (
+                 CharParserBuilder.ParseConvert
+                 (
+                     Parser.ParseString,
+                     s => string.Compare(s, "a b•", StringComparison.InvariantCulture) == 0,
+                     "failed to test string"
+                 ),
+                 "\"a b\\U2022\""
+            );
+
+            Assert.AreEqual("{ success, pos = 0, len = 11, value = True }", formatBoolResult(result));
+        }
+
+
+        [TestMethod]
+        public void ParseStringWithEscapedQuote()
+        {
+            var result = CharParserContext.TryParse
+            (
+                 CharParserBuilder.ParseConvert
+                 (
+                     Parser.ParseString,
+                     s => string.Compare(s, "\"", StringComparison.InvariantCulture) == 0,
+                     "failed to test string"
+                 ),
+                 "\"\\\"\""
+            );
+
+            Assert.AreEqual("{ success, pos = 0, len = 4, value = True }", formatBoolResult(result));
         }
     }
 }
