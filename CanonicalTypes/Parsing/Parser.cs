@@ -292,39 +292,39 @@ namespace CanonicalTypes.Parsing
 
         #endregion
 
+        public static ICharParser<string> BuildRegexToStringParser(string regexStr, string errorMessage)
+        {
+            return CharParserBuilder.ParseConvert
+            (
+                CharParserBuilder.ParseFromRegex
+                (
+                    new Regex(regexStr, RegexOptions.Compiled | RegexOptions.ExplicitCapture),
+                    errorMessage
+                ),
+                match => match.Value,
+                errorMessage
+            );
+        }
+
         #region Parse Double (Decimal)
 
         private static Lazy<ICharParser<double>> parseDouble = new Lazy<ICharParser<double>>(BuildParseDouble, LazyThreadSafetyMode.ExecutionAndPublication);
 
         private static ICharParser<double> BuildParseDouble()
         {
-            Func<string, string, ICharParser<string>> regex = delegate (string str, string errorMessage)
-            {
-                return CharParserBuilder.ParseConvert
-                (
-                    CharParserBuilder.ParseFromRegex
-                    (
-                        new Regex(str, RegexOptions.Compiled | RegexOptions.ExplicitCapture),
-                        errorMessage
-                    ),
-                    match => match.Value,
-                    errorMessage
-                );
-            };
-
-            var intPart = regex
+            var intPart = BuildRegexToStringParser
             (
                 "\\G-?(?:0(?![0-9])|(?:[1-9][0-9]*))(?=[\\.eE])",
                 "Failed to parse float (int part)"
             );
 
-            var fracPart = regex
+            var fracPart = BuildRegexToStringParser
             (
                 "\\G\\.[0-9]*",
                 "Failed to parse float (frac part)"
             );
 
-            var exptPart = regex
+            var exptPart = BuildRegexToStringParser
             (
                 "\\G[Ee](\\+|-)?[1-9][0-9]*",
                 "Failed to parse float (expt part)"
