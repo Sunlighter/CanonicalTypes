@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CanonicalTypes.Parsing;
 using CanonicalTypes;
 using System.Collections.Immutable;
+using System.Numerics;
 
 namespace CanonicalTypesTest
 {
@@ -12,12 +13,14 @@ namespace CanonicalTypesTest
         private ICharParser<Datum> parseNull;
         private ICharParser<Datum> parseDatum;
         private Func<ParseResult<bool>, string> formatBoolResult;
+        private Func<ParseResult<BigInteger>, string> formatBigIntegerResult;
 
         public ParseDatumTests()
         {
             parseNull = Parser.ParseNull;
             parseDatum = Parser.ParseDatum;
             formatBoolResult = Utility.GetParseResultStringConverter<bool>(b => b.ToString());
+            formatBigIntegerResult = Utility.GetParseResultStringConverter<BigInteger>(b => b.ToString());
         }
 
         [TestMethod]
@@ -116,7 +119,7 @@ namespace CanonicalTypesTest
                 new Tuple<Datum, Datum>[]
                 {
                     new Tuple<Datum, Datum>(BooleanDatum.True, BooleanDatum.False),
-                    new Tuple<Datum, Datum>(NullDatum.Value, BooleanDatum.True),
+                    new Tuple<Datum, Datum>(NullDatum.Value, new IntDatum(1000)),
                     new Tuple<Datum, Datum>(new ListDatum(new Datum[] { BooleanDatum.True, BooleanDatum.False }.ToImmutableList()), NullDatum.Value),
                 }
             );
@@ -129,10 +132,58 @@ namespace CanonicalTypesTest
                     d => DatumEqualityComparer.Instance.Equals(d, complexDictionary),
                     null
                 ),
-                " { #t => #f, #nil => #t, (#t #f) => #nil }"
+                " { #t => #f, #nil => 1000, (#t #f) => #nil }"
             );
 
-            Assert.AreEqual("{ success, pos = 0, len = 42, value = True }", formatBoolResult(result));
+            Assert.AreEqual("{ success, pos = 0, len = 44, value = True }", formatBoolResult(result));
+        }
+
+        [TestMethod]
+        public void ParseBigInteger()
+        {
+            var result = CharParserContext.TryParse
+            (
+                Parser.ParseBigInteger,
+                "-2359862495629582635"
+            );
+
+            Assert.AreEqual("{ success, pos = 0, len = 20, value = -2359862495629582635 }", formatBigIntegerResult(result));
+        }
+
+        [TestMethod]
+        public void ParseNotBigIntegerButRational()
+        {
+            var result = CharParserContext.TryParse
+            (
+                Parser.ParseBigInteger,
+                "1/3"
+            );
+
+            Assert.AreEqual("{ failure, { pos = 0, message = \"Failed to parse integer\" } }", formatBigIntegerResult(result));
+        }
+
+        [TestMethod]
+        public void ParseNotBigIntegerButFloatE()
+        {
+            var result = CharParserContext.TryParse
+            (
+                Parser.ParseBigInteger,
+                "1e+10"
+            );
+
+            Assert.AreEqual("{ failure, { pos = 0, message = \"Failed to parse integer\" } }", formatBigIntegerResult(result));
+        }
+
+        [TestMethod]
+        public void ParseNotBigIntegerButFloat()
+        {
+            var result = CharParserContext.TryParse
+            (
+                Parser.ParseBigInteger,
+                "1.5"
+            );
+
+            Assert.AreEqual("{ failure, { pos = 0, message = \"Failed to parse integer\" } }", formatBigIntegerResult(result));
         }
     }
 }

@@ -311,7 +311,7 @@ namespace CanonicalTypes.Parsing
                 }
                 else
                 {
-                    return new ParseFailure<Match>(off, failureMessage);
+                    return new ParseFailure<Match>(off, failureMessage ?? $"Failed to parse {regex.ToString().Quoted()}");
                 }
             }
         }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
+using System.Numerics;
 
 namespace CanonicalTypes.Parsing
 {
@@ -250,6 +251,36 @@ namespace CanonicalTypes.Parsing
             );
         }
 
+        private static Lazy<ICharParser<BigInteger>> parseBigInteger = new Lazy<ICharParser<BigInteger>>(BuildParseBigInteger, LazyThreadSafetyMode.ExecutionAndPublication);
+
+        public static ICharParser<BigInteger> ParseBigInteger => parseBigInteger.Value;
+
+        private static ICharParser<BigInteger> BuildParseBigInteger()
+        {
+            return CharParserBuilder.ParseTryConvert
+            (
+                CharParserBuilder.ParseFromRegex
+                (
+                    new Regex
+                    (
+                        "\\G-?(?:0(?![0-9])|(?:[1-9][0-9]*))(?![/\\.eE])",
+                        RegexOptions.Compiled | RegexOptions.ExplicitCapture
+                    ),
+                    "Failed to parse integer"
+                ),
+                match =>
+                {
+                    BigInteger b;
+                    if (BigInteger.TryParse(match.Value, out b))
+                    {
+                        return Option<BigInteger>.Some(b);
+                    }
+                    else return Option<BigInteger>.None;
+                },
+                "Failed to parse integer"
+            ).WithOptionalLeadingWhiteSpace();
+        }
+
         private static Lazy<ICharParser<Datum>> parseDatum = new Lazy<ICharParser<Datum>>(BuildParseDatum, LazyThreadSafetyMode.ExecutionAndPublication);
 
         private static ICharParser<Datum> BuildParseDatum()
@@ -263,6 +294,7 @@ namespace CanonicalTypes.Parsing
                     ParseNull,
                     ParseFalse,
                     ParseTrue,
+                    CharParserBuilder.ParseConvert(ParseBigInteger, b => (Datum)(new IntDatum(b)), null),
                     CharParserBuilder.ParseConvert(BuildListParser(parseDatum), lst => (Datum)(new ListDatum(lst)), null),
                     CharParserBuilder.ParseConvert(BuildDictionaryParser(parseDatum, parseDatum, DictionaryDatum.Empty, (d, k, v) => d.Add(k, v)), dict => (Datum)dict, null),
                 }
