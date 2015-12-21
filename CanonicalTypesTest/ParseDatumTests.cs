@@ -122,7 +122,7 @@ namespace CanonicalTypesTest
                 {
                     new Tuple<Datum, Datum>(BooleanDatum.True, BooleanDatum.False),
                     new Tuple<Datum, Datum>(NullDatum.Value, new IntDatum(1000)),
-                    new Tuple<Datum, Datum>(new ListDatum(new Datum[] { BooleanDatum.True, BooleanDatum.False }.ToImmutableList()), new SymbolDatum("blah")),
+                    new Tuple<Datum, Datum>(new ListDatum(new Datum[] { BooleanDatum.True, new RationalDatum(BigRational.OneHalf) }.ToImmutableList()), new SymbolDatum("blah")),
                 }
             );
 
@@ -134,10 +134,10 @@ namespace CanonicalTypesTest
                     d => DatumEqualityComparer.Instance.Equals(d, complexDictionary),
                     null
                 ),
-                " { #t => #f, #nil => 1000, (#t #f) => blah }"
+                " { #t => #f, #nil => 1000, (#t 1/2) => blah }"
             );
 
-            Assert.AreEqual("{ success, pos = 0, len = 44, value = True }", formatBoolResult(result));
+            Assert.AreEqual("{ success, pos = 0, len = 45, value = True }", formatBoolResult(result));
         }
 
         [TestMethod]
@@ -371,6 +371,23 @@ namespace CanonicalTypesTest
             );
 
             Assert.AreEqual("{ success, pos = 0, len = 4, value = True }", formatBoolResult(result));
+        }
+        
+        [TestMethod]
+        public void ParseRational()
+        {
+            var result = CharParserContext.TryParse
+            (
+                CharParserBuilder.ParseConvert
+                (
+                    Parser.ParseBigRational,
+                    r => (r == BigRational.OneHalf),
+                    "failed to test big rational"
+                ),
+                "1/2"
+            );
+            
+            Assert.AreEqual("{ success, pos = 0, len = 3, value = True }", formatBoolResult(result));
         }
     }
 }

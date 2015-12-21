@@ -290,6 +290,41 @@ namespace CanonicalTypes.Parsing
         public static ICharParser<BigInteger> ParseBigInteger => parseBigInteger.Value;
 
         #endregion
+        
+        #region Parse BigRational (Decimal)
+        
+        private static Lazy<ICharParser<BigRational>> parseBigRational = new Lazy<ICharParser<BigRational>>(BuildParseBigRational, LazyThreadSafetyMode.ExecutionAndPublication);
+        
+        private static ICharParser<BigRational> BuildParseBigRational()
+        {
+             return CharParserBuilder.ParseTryConvert
+            (
+                CharParserBuilder.ParseFromRegex
+                (
+                    new Regex
+                    (
+                        "\\G(?<n>-?(?:0(?![0-9])|(?:[1-9][0-9]*)))/(?<d>[1-9][0-9]*)",
+                        RegexOptions.Compiled | RegexOptions.ExplicitCapture
+                    ),
+                    "Failed to parse rational"
+                ),
+                match =>
+                {
+                    BigInteger n;
+                    BigInteger d;
+                    if (BigInteger.TryParse(match.Groups["n"].Value, out n) && BigInteger.TryParse(match.Groups["d"].Value, out d))
+                    {
+                        return Option<BigRational>.Some(new BigRational(n, d));
+                    }
+                    else return Option<BigRational>.None;
+                },
+                "Failed to parse rational"
+            );
+        } 
+        
+        public static ICharParser<BigRational> ParseBigRational => parseBigRational.Value;
+         
+        #endregion
 
         public static ICharParser<string> BuildRegexToStringParser(string regexStr, string errorMessage)
         {
@@ -603,6 +638,7 @@ namespace CanonicalTypes.Parsing
                     ParseFalse,
                     ParseTrue,
                     CharParserBuilder.ParseConvert(ParseString, s => (Datum)(new StringDatum(s)), null),
+                    CharParserBuilder.ParseConvert(ParseBigRational, r => (Datum)(new RationalDatum(r)), null),
                     CharParserBuilder.ParseConvert(ParseBigInteger, b => (Datum)(new IntDatum(b)), null),
                     CharParserBuilder.ParseConvert(ParseDouble, d => (Datum)(new FloatDatum(d)), null),
                     CharParserBuilder.ParseConvert(ParseSymbol, s => (Datum)(new SymbolDatum(s)), null),
@@ -612,6 +648,8 @@ namespace CanonicalTypes.Parsing
                 .ToImmutableList()
             )
             .WithOptionalLeadingWhiteSpace();
+
+            // TODO: char, bytearray, set, mutablebox, guid
 
             CharParserBuilder.SetParseVariable(parseDatum, p0);
 
