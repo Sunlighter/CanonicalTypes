@@ -389,5 +389,101 @@ namespace CanonicalTypesTest
             
             Assert.AreEqual("{ success, pos = 0, len = 3, value = True }", formatBoolResult(result));
         }
+
+        [TestMethod]
+        public void ParseNamedChar()
+        {
+            var result = CharParserContext.TryParse
+            (
+                CharParserBuilder.ParseConvert
+                (
+                    Parser.ParseNamedChar,
+                    r => (r == '\t'),
+                    "failed to test named character"
+                ),
+                "#\\tab"
+            );
+
+            Assert.AreEqual("{ success, pos = 0, len = 5, value = True }", formatBoolResult(result));
+        }
+
+        [TestMethod]
+        public void ParseNamedCharInvalid()
+        {
+            var result = CharParserContext.TryParse
+            (
+                CharParserBuilder.ParseConvert
+                (
+                    Parser.ParseNamedChar,
+                    r => true,
+                    "failed to test invalid named character"
+                ),
+                "#\\wrong"
+            );
+
+            Assert.AreEqual("{ failure, { pos = 0, message = \"Failed to parse named character\" } }", formatBoolResult(result));
+        }
+
+        [TestMethod]
+        public void ParseLiteralChar()
+        {
+            var result = CharParserContext.TryParse
+            (
+                CharParserBuilder.ParseConvert
+                (
+                    Parser.ParseLiteralChar,
+                    r => (r == '$'),
+                    "failed to test literal character"
+                ),
+                "#\\$"
+            );
+
+            Assert.AreEqual("{ success, pos = 0, len = 3, value = True }", formatBoolResult(result));
+        }
+
+        [TestMethod]
+        public void ParseHexChar()
+        {
+            var result = CharParserContext.TryParse
+            (
+                CharParserBuilder.ParseConvert
+                (
+                    Parser.ParseHexChar,
+                    r => (r == 'a'),
+                    "failed to test hex character"
+                ),
+                "#\\x61"
+            );
+
+            Assert.AreEqual("{ success, pos = 0, len = 5, value = True }", formatBoolResult(result));
+        }
+
+        [TestMethod]
+        public void ParseCharacterList()
+        {
+            Datum characterList = new ListDatum
+            (
+                new Datum[]
+                {
+                    new CharDatum('a'),
+                    new CharDatum('\uFEFF'),
+                    new CharDatum('\n'),
+                }
+                .ToImmutableList()
+            );
+
+            var result = CharParserContext.TryParse
+            (
+                CharParserBuilder.ParseConvert
+                (
+                    parseDatum,
+                    d => DatumEqualityComparer.Instance.Equals(d, characterList),
+                    null
+                ),
+                "(#\\a #\\xFEFF #\\newline)"
+            );
+
+            Assert.AreEqual("{ success, pos = 0, len = 23, value = True }", formatBoolResult(result));
+        }
     }
 }
