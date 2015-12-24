@@ -257,6 +257,47 @@ namespace CanonicalTypes.Parsing
             );
         }
 
+        public static ICharParser<TSet> BuildSetParser<TItem, TSet>
+        (
+            ICharParser<TItem> itemParser,
+            TSet empty,
+            Func<TSet, TItem, TSet> addItem
+        )
+        {
+            var set = CharParserBuilder.ParseSequence
+            (
+                new ICharParser<object>[]
+                {
+                    Token("#s{"),
+                    CharParserBuilder.ParseOptRep
+                    (
+                        itemParser, true, true
+
+                    ).ResultToObject(),
+                    Token("}")
+                }
+                .ToImmutableList()
+            );
+
+            return CharParserBuilder.ParseConvert
+            (
+                set,
+                objs =>
+                {
+                    ImmutableList<TItem> items = (ImmutableList<TItem>)objs[1];
+
+                    TSet s = empty;
+                    foreach (TItem item in items)
+                    {
+                        s = addItem(s, item);
+                    }
+
+                    return s;
+                },
+                null
+            );
+        }
+
         #region Parse BigInteger (Decimal)
 
         private static Lazy<ICharParser<BigInteger>> parseBigInteger = new Lazy<ICharParser<BigInteger>>(BuildParseBigInteger, LazyThreadSafetyMode.ExecutionAndPublication);
@@ -290,9 +331,43 @@ namespace CanonicalTypes.Parsing
         public static ICharParser<BigInteger> ParseBigInteger => parseBigInteger.Value;
 
         #endregion
-        
+
+        #region Parse Guid
+
+        private static Lazy<ICharParser<Guid>> parseGuid = new Lazy<ICharParser<Guid>>(BuildParseGuid, LazyThreadSafetyMode.ExecutionAndPublication);
+
+        private static ICharParser<Guid> BuildParseGuid()
+        {
+            return CharParserBuilder.ParseTryConvert
+            (
+                CharParserBuilder.ParseFromRegex
+                (
+                    new Regex
+                    (
+                        "\\G#g\\{(?<digits>[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12})\\}",
+                        RegexOptions.Compiled | RegexOptions.ExplicitCapture
+                    ),
+                    "Failed to parse guid"
+                ),
+                match =>
+                {
+                    Guid g;
+                    if (Guid.TryParse(match.Groups["digits"].Value, out g))
+                    {
+                        return Option<Guid>.Some(g);
+                    }
+                    else return Option<Guid>.None;
+                },
+                "Failed to parse guid"
+            );
+        }
+
+        public static ICharParser<Guid> ParseGuid => parseGuid.Value;
+
+        #endregion
+
         #region Parse BigRational (Decimal)
-        
+
         private static Lazy<ICharParser<BigRational>> parseBigRational = new Lazy<ICharParser<BigRational>>(BuildParseBigRational, LazyThreadSafetyMode.ExecutionAndPublication);
         
         private static ICharParser<BigRational> BuildParseBigRational()
@@ -785,14 +860,16 @@ namespace CanonicalTypes.Parsing
                     CharParserBuilder.ParseConvert(ParseDouble, d => (Datum)(new FloatDatum(d)), null),
                     CharParserBuilder.ParseConvert(ParseSymbol, s => (Datum)(new SymbolDatum(s)), null),
                     CharParserBuilder.ParseConvert(ParseChar, c => (Datum)(new CharDatum(c)), null),
+                    CharParserBuilder.ParseConvert(ParseGuid, g => (Datum)(new GuidDatum(g)), null),
                     CharParserBuilder.ParseConvert(BuildListParser(parseDatum), lst => (Datum)(new ListDatum(lst)), null),
+                    CharParserBuilder.ParseConvert(BuildSetParser(parseDatum, SetDatum.Empty, (s, i) => s.Add(i)), s => (Datum)s, null),
                     CharParserBuilder.ParseConvert(BuildDictionaryParser(parseDatum, parseDatum, DictionaryDatum.Empty, (d, k, v) => d.Add(k, v)), dict => (Datum)dict, null),
                 }
                 .ToImmutableList()
             )
             .WithOptionalLeadingWhiteSpace();
 
-            // TODO: bytearray, set, mutablebox, guid
+            // TODO: bytearray, mutablebox
 
             CharParserBuilder.SetParseVariable(parseDatum, p0);
 

@@ -485,5 +485,41 @@ namespace CanonicalTypesTest
 
             Assert.AreEqual("{ success, pos = 0, len = 23, value = True }", formatBoolResult(result));
         }
+
+        [TestMethod]
+        public void ParseSet()
+        {
+            Datum set = SetDatum.Empty.Add(new SymbolDatum("a")).Add(new SymbolDatum("b")).Add(new IntDatum(1000));
+
+            var result = CharParserContext.TryParse
+            (
+                CharParserBuilder.ParseConvert
+                (
+                    parseDatum,
+                    d => DatumEqualityComparer.Instance.Equals(d, set),
+                    null
+                ),
+                "#s{ a b 1000 }"
+            );
+
+            Assert.AreEqual("{ success, pos = 0, len = 14, value = True }", formatBoolResult(result));
+        }
+
+        [TestMethod]
+        public void ParseGuid()
+        {
+            var result = CharParserContext.TryParse
+            (
+                CharParserBuilder.ParseConvert
+                (
+                    Parser.ParseGuid,
+                    g => g == new Guid("{01234567-89ab-cdef-0123-456789ABCDEF}"),
+                    null
+                ),
+                "#g{01234567-89ab-cdef-0123-456789ABCDEF}"
+            );
+
+            Assert.AreEqual("{ success, pos = 0, len = 40, value = True }", formatBoolResult(result));
+        }
     }
 }
