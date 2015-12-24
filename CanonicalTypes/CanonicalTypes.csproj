@@ -70,8 +70,17 @@
     <Compile Include="Parsing\CharParserBuilder.cs" />
     <Compile Include="Parsing\Extensions.cs" />
     <Compile Include="Parsing\ICharParser.cs" />
+    <Compile Include="Parsing\ParseBigInteger.cs" />
+    <Compile Include="Parsing\ParseBigRational.cs" />
+    <Compile Include="Parsing\ParseCharacter.cs" />
+    <Compile Include="Parsing\ParseDictionary.cs" />
+    <Compile Include="Parsing\ParseDouble.cs" />
+    <Compile Include="Parsing\ParseGuid.cs" />
+    <Compile Include="Parsing\ParseQuotedStringOrSymbol.cs" />
     <Compile Include="Parsing\Parser.cs" />
     <Compile Include="Parsing\ParseResult.cs" />
+    <Compile Include="Parsing\ParseSet.cs" />
+    <Compile Include="Parsing\ParseUnquotedSymbol.cs" />
     <Compile Include="Parsing\PosLenId.cs" />
     <Compile Include="Parsing\Utility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
