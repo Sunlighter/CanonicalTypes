@@ -99,6 +99,15 @@ namespace CanonicalTypes.Parsing
             );
         }
 
+        private static Lazy<ICharParser<string>> newlineEscape = new Lazy<ICharParser<string>>(BuildNewlineEscape, LazyThreadSafetyMode.ExecutionAndPublication);
+
+        private static ICharParser<string> BuildNewlineEscape()
+        {
+            return BuildRegexToStringParser("\\G\\\\( |\\t)*(\\r(\\n?)|\\n(\\r?))", "Failed to parse newline escape");
+        }
+
+        public static ICharParser<string> NewlineEscape => newlineEscape.Value;
+
         private static ICharParser<string> BuildParseString(bool stringNotSymbol)
         {
             var localEscapeChars = escapeChars.Value;
@@ -137,6 +146,7 @@ namespace CanonicalTypes.Parsing
                                     {
                                         stringChars,
                                         BuildOneCharEscape(stringNotSymbol, localEscapeChars),
+                                        CharParserBuilder.ParseConvert(NewlineEscape, str => string.Empty, "Failed to parse newline escape"),
                                         hexEscape.Value,
                                         unicodeEscape.Value
                                     }

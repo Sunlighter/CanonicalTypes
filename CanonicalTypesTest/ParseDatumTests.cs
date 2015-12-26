@@ -372,7 +372,24 @@ namespace CanonicalTypesTest
 
             Assert.AreEqual("{ success, pos = 0, len = 4, value = True }", formatBoolResult(result));
         }
-        
+
+        [TestMethod]
+        public void ParseStringWithNewlineEscape()
+        {
+            var result = CharParserContext.TryParse
+            (
+                 CharParserBuilder.ParseConvert
+                 (
+                     Parser.ParseString,
+                     s => string.Compare(s, "abcd", StringComparison.InvariantCulture) == 0,
+                     "failed to test string"
+                 ),
+                 "\"ab\\\r\ncd\""
+            );
+
+            Assert.AreEqual("{ success, pos = 0, len = 9, value = True }", formatBoolResult(result));
+        }
+
         [TestMethod]
         public void ParseRational()
         {
