@@ -15,9 +15,9 @@ namespace CanonicalTypes.Parsing
 
         private static ICharParser<BigInteger> BuildParseBigInteger()
         {
-            return CharParserBuilder.ParseTryConvert
+            return ParseTryConvert
             (
-                CharParserBuilder.ParseFromRegex
+                ParseFromRegex
                 (
                     new Regex
                     (

@@ -30,7 +30,7 @@ namespace CanonicalTypesTest
         {
             var result = CharParserContext.TryParse
             (
-                CharParserBuilder.ParseConvert
+                Parser.ParseConvert
                 (
                     parseDatum,
                     d => DatumEqualityComparer.Instance.Equals(d, NullDatum.Value),
@@ -47,7 +47,7 @@ namespace CanonicalTypesTest
         {
             var result = CharParserContext.TryParse
             (
-                CharParserBuilder.ParseConvert
+                Parser.ParseConvert
                 (
                     parseDatum,
                     d => DatumEqualityComparer.Instance.Equals(d, NullDatum.Value),
@@ -64,7 +64,7 @@ namespace CanonicalTypesTest
         {
             var result = CharParserContext.TryParse
             (
-                CharParserBuilder.ParseConvert
+                Parser.ParseConvert
                 (
                     parseDatum,
                     d => DatumEqualityComparer.Instance.Equals(d, BooleanDatum.True),
@@ -101,7 +101,7 @@ namespace CanonicalTypesTest
 
             var result = CharParserContext.TryParse
             (
-                CharParserBuilder.ParseConvert
+                Parser.ParseConvert
                 (
                     parseDatum,
                     d => DatumEqualityComparer.Instance.Equals(d, complexList),
@@ -128,7 +128,7 @@ namespace CanonicalTypesTest
 
             var result = CharParserContext.TryParse
             (
-                CharParserBuilder.ParseConvert
+                Parser.ParseConvert
                 (
                     parseDatum,
                     d => DatumEqualityComparer.Instance.Equals(d, complexDictionary),
@@ -241,7 +241,7 @@ namespace CanonicalTypesTest
         {
             var result = CharParserContext.TryParse
             (
-                 CharParserBuilder.ParseConvert
+                 Parser.ParseConvert
                  (
                      Parser.ParseQuotedSymbol,
                      s => string.Compare(s, "a b", StringComparison.InvariantCulture) == 0,
@@ -258,7 +258,7 @@ namespace CanonicalTypesTest
         {
             var result = CharParserContext.TryParse
             (
-                 CharParserBuilder.ParseConvert
+                 Parser.ParseConvert
                  (
                      Parser.ParseQuotedSymbol,
                      s => string.Compare(s, "a bA", StringComparison.InvariantCulture) == 0,
@@ -275,7 +275,7 @@ namespace CanonicalTypesTest
         {
             var result = CharParserContext.TryParse
             (
-                 CharParserBuilder.ParseConvert
+                 Parser.ParseConvert
                  (
                      Parser.ParseQuotedSymbol,
                      s => string.Compare(s, "a b•", StringComparison.InvariantCulture) == 0,
@@ -292,7 +292,7 @@ namespace CanonicalTypesTest
         {
             var result = CharParserContext.TryParse
             (
-                 CharParserBuilder.ParseConvert
+                 Parser.ParseConvert
                  (
                      Parser.ParseQuotedSymbol,
                      s => string.Compare(s, "|", StringComparison.InvariantCulture) == 0,
@@ -309,7 +309,7 @@ namespace CanonicalTypesTest
         {
             var result = CharParserContext.TryParse
             (
-                 CharParserBuilder.ParseConvert
+                 Parser.ParseConvert
                  (
                      Parser.ParseString,
                      s => string.Compare(s, "a b", StringComparison.InvariantCulture) == 0,
@@ -326,7 +326,7 @@ namespace CanonicalTypesTest
         {
             var result = CharParserContext.TryParse
             (
-                 CharParserBuilder.ParseConvert
+                 Parser.ParseConvert
                  (
                      Parser.ParseString,
                      s => string.Compare(s, "a bA", StringComparison.InvariantCulture) == 0,
@@ -343,7 +343,7 @@ namespace CanonicalTypesTest
         {
             var result = CharParserContext.TryParse
             (
-                 CharParserBuilder.ParseConvert
+                 Parser.ParseConvert
                  (
                      Parser.ParseString,
                      s => string.Compare(s, "a b•", StringComparison.InvariantCulture) == 0,
@@ -361,7 +361,7 @@ namespace CanonicalTypesTest
         {
             var result = CharParserContext.TryParse
             (
-                 CharParserBuilder.ParseConvert
+                 Parser.ParseConvert
                  (
                      Parser.ParseString,
                      s => string.Compare(s, "\"", StringComparison.InvariantCulture) == 0,
@@ -378,7 +378,7 @@ namespace CanonicalTypesTest
         {
             var result = CharParserContext.TryParse
             (
-                 CharParserBuilder.ParseConvert
+                 Parser.ParseConvert
                  (
                      Parser.ParseString,
                      s => string.Compare(s, "abcd", StringComparison.InvariantCulture) == 0,
@@ -395,7 +395,7 @@ namespace CanonicalTypesTest
         {
             var result = CharParserContext.TryParse
             (
-                CharParserBuilder.ParseConvert
+                Parser.ParseConvert
                 (
                     Parser.ParseBigRational,
                     r => (r == BigRational.OneHalf),
@@ -412,7 +412,7 @@ namespace CanonicalTypesTest
         {
             var result = CharParserContext.TryParse
             (
-                CharParserBuilder.ParseConvert
+                Parser.ParseConvert
                 (
                     Parser.ParseNamedChar,
                     r => (r == '\t'),
@@ -429,7 +429,7 @@ namespace CanonicalTypesTest
         {
             var result = CharParserContext.TryParse
             (
-                CharParserBuilder.ParseConvert
+                Parser.ParseConvert
                 (
                     Parser.ParseNamedChar,
                     r => true,
@@ -446,7 +446,7 @@ namespace CanonicalTypesTest
         {
             var result = CharParserContext.TryParse
             (
-                CharParserBuilder.ParseConvert
+                Parser.ParseConvert
                 (
                     Parser.ParseLiteralChar,
                     r => (r == '$'),
@@ -463,7 +463,7 @@ namespace CanonicalTypesTest
         {
             var result = CharParserContext.TryParse
             (
-                CharParserBuilder.ParseConvert
+                Parser.ParseConvert
                 (
                     Parser.ParseHexChar,
                     r => (r == 'a'),
@@ -491,7 +491,7 @@ namespace CanonicalTypesTest
 
             var result = CharParserContext.TryParse
             (
-                CharParserBuilder.ParseConvert
+                Parser.ParseConvert
                 (
                     parseDatum,
                     d => DatumEqualityComparer.Instance.Equals(d, characterList),
@@ -510,7 +510,7 @@ namespace CanonicalTypesTest
 
             var result = CharParserContext.TryParse
             (
-                CharParserBuilder.ParseConvert
+                Parser.ParseConvert
                 (
                     parseDatum,
                     d => DatumEqualityComparer.Instance.Equals(d, set),
@@ -527,7 +527,7 @@ namespace CanonicalTypesTest
         {
             var result = CharParserContext.TryParse
             (
-                CharParserBuilder.ParseConvert
+                Parser.ParseConvert
                 (
                     Parser.ParseGuid,
                     g => g == new Guid("{01234567-89ab-cdef-0123-456789ABCDEF}"),

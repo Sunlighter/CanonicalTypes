@@ -16,12 +16,12 @@ namespace CanonicalTypes.Parsing
             Func<TSet, TItem, TSet> addItem
         )
         {
-            var set = CharParserBuilder.ParseSequence
+            var set = ParseSequence
             (
                 new ICharParser<object>[]
                 {
                     Token("#s{"),
-                    CharParserBuilder.ParseOptRep
+                    ParseOptRep
                     (
                         itemParser, true, true
 
@@ -31,7 +31,7 @@ namespace CanonicalTypes.Parsing
                 .ToImmutableList()
             );
 
-            return CharParserBuilder.ParseConvert
+            return ParseConvert
             (
                 set,
                 objs =>

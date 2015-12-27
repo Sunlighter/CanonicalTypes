@@ -17,9 +17,9 @@ namespace CanonicalTypes.Parsing
             Func<TDict, TKey, TValue, TDict> addItem
         )
         {
-            ICharParser<Tuple<TKey, TValue>> kvp = CharParserBuilder.ParseConvert
+            ICharParser<Tuple<TKey, TValue>> kvp = ParseConvert
             (
-                CharParserBuilder.ParseSequence
+                ParseSequence
                 (
                     new ICharParser<object>[]
                     {
@@ -33,16 +33,16 @@ namespace CanonicalTypes.Parsing
                 null
             );
 
-            var dict = CharParserBuilder.ParseSequence
+            var dict = ParseSequence
             (
                 new ICharParser<object>[]
                 {
                     Token("{"),
-                    CharParserBuilder.ParseOptRep
+                    ParseOptRep
                     (
-                        CharParserBuilder.ParseConvert
+                        ParseConvert
                         (
-                            CharParserBuilder.ParseSequence
+                            ParseSequence
                             (
                                 new ICharParser<object>[]
                                 {
@@ -58,7 +58,7 @@ namespace CanonicalTypes.Parsing
                         true
                     )
                     .ResultToObject(),
-                    CharParserBuilder.ParseOptRep
+                    ParseOptRep
                     (
                         kvp,
                         true,
@@ -70,7 +70,7 @@ namespace CanonicalTypes.Parsing
                 .ToImmutableList()
             );
 
-            return CharParserBuilder.ParseConvert
+            return ParseConvert
             (
                 dict,
                 objs =>

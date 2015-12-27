@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CanonicalTypes.Parsing
 {
-    public static class CharParserBuilder
+    public static partial class Parser
     {
         private class CharParserEmptyString : ICharParser<string>
         {

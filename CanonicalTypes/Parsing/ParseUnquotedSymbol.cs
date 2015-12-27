@@ -26,7 +26,7 @@ namespace CanonicalTypes.Parsing
                 "Failed to parse unquoted symbol (with minus)"
             );
 
-            return CharParserBuilder.ParseAlternatives
+            return ParseAlternatives
             (
                 new ICharParser<string>[]
                 {

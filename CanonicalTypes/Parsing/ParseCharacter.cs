@@ -33,9 +33,9 @@ namespace CanonicalTypes.Parsing
 
         private static ICharParser<char> BuildParseNamedChar()
         {
-            return CharParserBuilder.ParseTryConvert
+            return ParseTryConvert
             (
-                CharParserBuilder.ParseFromRegex
+                ParseFromRegex
                 (
                     new Regex
                     (
@@ -66,9 +66,9 @@ namespace CanonicalTypes.Parsing
 
         private static ICharParser<char> BuildParseLiteralChar()
         {
-            return CharParserBuilder.ParseTryConvert
+            return ParseTryConvert
             (
-                CharParserBuilder.ParseFromRegex
+                ParseFromRegex
                 (
                     new Regex
                     (
@@ -95,15 +95,15 @@ namespace CanonicalTypes.Parsing
             );
         }
 
-        public static ICharParser<char> ParseLiteralChar = parseLiteralChar.Value;
+        public static ICharParser<char> ParseLiteralChar => parseLiteralChar.Value;
 
         private static Lazy<ICharParser<char>> parseHexChar = new Lazy<ICharParser<char>>(BuildParseHexChar, LazyThreadSafetyMode.ExecutionAndPublication);
 
         private static ICharParser<char> BuildParseHexChar()
         {
-            return CharParserBuilder.ParseTryConvert
+            return ParseTryConvert
             (
-                CharParserBuilder.ParseFromRegex
+                ParseFromRegex
                 (
                     new Regex
                     (
@@ -129,13 +129,13 @@ namespace CanonicalTypes.Parsing
             );
         }
 
-        public static ICharParser<char> ParseHexChar = parseHexChar.Value;
+        public static ICharParser<char> ParseHexChar => parseHexChar.Value;
 
         private static Lazy<ICharParser<char>> parseChar = new Lazy<ICharParser<char>>(BuildParseChar, LazyThreadSafetyMode.ExecutionAndPublication);
 
         private static ICharParser<char> BuildParseChar()
         {
-            return CharParserBuilder.ParseAlternatives
+            return ParseAlternatives
             (
                 new ICharParser<char>[]
                 {

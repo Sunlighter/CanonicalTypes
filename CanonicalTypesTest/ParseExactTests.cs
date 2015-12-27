@@ -14,7 +14,7 @@ namespace CanonicalTypesTest
 
         public ParseExactTests()
         {
-            parser = CharParserBuilder.ParseExact("abc", StringComparison.InvariantCultureIgnoreCase);
+            parser = Parser.ParseExact("abc", StringComparison.InvariantCultureIgnoreCase);
             toString = Utility.GetParseResultStringConverter<string>(f => f.Quoted());
         }
 

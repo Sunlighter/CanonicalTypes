@@ -30,9 +30,9 @@ namespace CanonicalTypes.Parsing
 
         private static ICharParser<string> BuildParseHexEscape()
         {
-            return CharParserBuilder.ParseConvert
+            return ParseConvert
             (
-                CharParserBuilder.ParseFromRegex
+                ParseFromRegex
                 (
                     new Regex
                     (
@@ -53,9 +53,9 @@ namespace CanonicalTypes.Parsing
 
         private static ICharParser<string> BuildParseUnicodeEscape()
         {
-            return CharParserBuilder.ParseConvert
+            return ParseConvert
             (
-                CharParserBuilder.ParseFromRegex
+                ParseFromRegex
                 (
                     new Regex
                     (
@@ -76,9 +76,9 @@ namespace CanonicalTypes.Parsing
         {
             string failureMessage = "failed to parse single-char escape in " + (stringNotSymbol ? "string" : "symbol");
 
-            return CharParserBuilder.ParseTryConvert
+            return ParseTryConvert
             (
-                CharParserBuilder.ParseFromRegex
+                ParseFromRegex
                 (
                     new Regex
                     (
@@ -129,24 +129,24 @@ namespace CanonicalTypes.Parsing
 
             var quote = stringNotSymbol ? Token("\"") : Token("|");
 
-            return CharParserBuilder.ParseConvert
+            return ParseConvert
             (
-                CharParserBuilder.ParseSequence
+                ParseSequence
                 (
                     new ICharParser<object>[]
                     {
                         quote,
-                        CharParserBuilder.ParseConvert
+                        ParseConvert
                         (
-                            CharParserBuilder.ParseOptRep
+                            ParseOptRep
                             (
-                                CharParserBuilder.ParseAlternatives
+                                ParseAlternatives
                                 (
                                     new ICharParser<string>[]
                                     {
                                         stringChars,
                                         BuildOneCharEscape(stringNotSymbol, localEscapeChars),
-                                        CharParserBuilder.ParseConvert(NewlineEscape, str => string.Empty, "Failed to parse newline escape"),
+                                        ParseConvert(NewlineEscape, str => string.Empty, "Failed to parse newline escape"),
                                         hexEscape.Value,
                                         unicodeEscape.Value
                                     }
@@ -179,7 +179,7 @@ namespace CanonicalTypes.Parsing
 
         private static ICharParser<string> BuildParseSymbol()
         {
-            return CharParserBuilder.ParseAlternatives
+            return ParseAlternatives
             (
                 new ICharParser<string>[]
                 {

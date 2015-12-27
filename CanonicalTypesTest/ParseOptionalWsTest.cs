@@ -16,7 +16,7 @@ namespace CanonicalTypesTest
         public ParseOptionalWsTest()
         {
             ws = Parser.ParseOptionalWhiteSpace;
-            a = CharParserBuilder.ParseExact("a", StringComparison.InvariantCultureIgnoreCase).WithOptionalLeadingWhiteSpace();
+            a = Parser.ParseExact("a", StringComparison.InvariantCultureIgnoreCase).WithOptionalLeadingWhiteSpace();
 
             toString = Utility.GetParseResultStringConverter<Nothing>(n => "null");
             toString2 = Utility.GetParseResultStringConverter<string>(s => s.Quoted());

@@ -18,9 +18,9 @@ namespace CanonicalTypesTest
 
         public ParseOptRepTests()
         {
-            parserOpt = CharParserBuilder.ParseOptRep(CharParserBuilder.ParseExact("abc", StringComparison.InvariantCultureIgnoreCase), true, false);
-            parserRep = CharParserBuilder.ParseOptRep(CharParserBuilder.ParseExact("abc", StringComparison.InvariantCultureIgnoreCase), false, true);
-            parserOptRep = CharParserBuilder.ParseOptRep(CharParserBuilder.ParseExact("abc", StringComparison.InvariantCultureIgnoreCase), true, true);
+            parserOpt = Parser.ParseOptRep(Parser.ParseExact("abc", StringComparison.InvariantCultureIgnoreCase), true, false);
+            parserRep = Parser.ParseOptRep(Parser.ParseExact("abc", StringComparison.InvariantCultureIgnoreCase), false, true);
+            parserOptRep = Parser.ParseOptRep(Parser.ParseExact("abc", StringComparison.InvariantCultureIgnoreCase), true, true);
             var listToString = Utility.GetImmutableListStringConverter<string>(i => i.Quoted());
             toString = Utility.GetParseResultStringConverter(listToString);
         }

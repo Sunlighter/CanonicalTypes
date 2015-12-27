@@ -19,9 +19,9 @@ namespace CanonicalTypes.Parsing
 
         private static ICharParser<Nothing> BuildOptionalWhiteSpace()
         {
-            return CharParserBuilder.ParseConvert
+            return ParseConvert
             (
-                CharParserBuilder.ParseFromRegex
+                ParseFromRegex
                 (
                     new Regex("\\G\\s*", RegexOptions.Compiled),
                     "whitespace expected"
@@ -37,13 +37,13 @@ namespace CanonicalTypes.Parsing
 
         private static ICharParser<T> WithOptionalLeadingWhiteSpace_Internal<T>(this ICharParser<T> parser)
         {
-            return CharParserBuilder.ParseConvert
+            return ParseConvert
             (
-                CharParserBuilder.ParseSequence
+                ParseSequence
                 (
                     new[]
                     {
-                        CharParserBuilder.ParseConvert
+                        ParseConvert
                         (
                             ParseOptionalWhiteSpace,
                             _ => default(T),
@@ -84,7 +84,7 @@ namespace CanonicalTypes.Parsing
 
         public static ICharParser<object> ResultToObject<T>(this ICharParser<T> parser)
         {
-            return CharParserBuilder.ParseConvert(parser, x => (object)x, null);
+            return ParseConvert(parser, x => (object)x, null);
         }
 
         #region ParseNull
@@ -93,9 +93,9 @@ namespace CanonicalTypes.Parsing
 
         private static ICharParser<Datum> BuildParseNull()
         {
-            return CharParserBuilder.ParseConvert
+            return ParseConvert
             (
-                CharParserBuilder.ParseExact
+                ParseExact
                 (
                     "#nil",
                     StringComparison.InvariantCulture
@@ -115,9 +115,9 @@ namespace CanonicalTypes.Parsing
 
         private static ICharParser<Datum> BuildParseFalse()
         {
-            return CharParserBuilder.ParseConvert
+            return ParseConvert
             (
-                CharParserBuilder.ParseExact
+                ParseExact
                 (
                     "#f",
                     StringComparison.InvariantCulture
@@ -137,9 +137,9 @@ namespace CanonicalTypes.Parsing
 
         private static ICharParser<Datum> BuildParseTrue()
         {
-            return CharParserBuilder.ParseConvert
+            return ParseConvert
             (
-                CharParserBuilder.ParseExact
+                ParseExact
                 (
                     "#t",
                     StringComparison.InvariantCulture
@@ -155,19 +155,19 @@ namespace CanonicalTypes.Parsing
 
         private static ICharParser<object> Token(string tokenStr)
         {
-            return CharParserBuilder.ParseExact(tokenStr, StringComparison.InvariantCulture).WithOptionalLeadingWhiteSpace().ResultToObject();
+            return ParseExact(tokenStr, StringComparison.InvariantCulture).WithOptionalLeadingWhiteSpace().ResultToObject();
         }
 
         public static ICharParser<ImmutableList<T>> BuildListParser<T>(ICharParser<T> itemParser)
         {
-            return CharParserBuilder.ParseConvert
+            return ParseConvert
             (
-                CharParserBuilder.ParseSequence
+                ParseSequence
                 (
                     new ICharParser<object>[]
                     {
                         Token("("),
-                        CharParserBuilder.ParseOptRep(itemParser.WithOptionalLeadingWhiteSpace(), true, true).ResultToObject(),
+                        ParseOptRep(itemParser.WithOptionalLeadingWhiteSpace(), true, true).ResultToObject(),
                         Token(")"),
                     }
                     .ToImmutableList()
@@ -179,9 +179,9 @@ namespace CanonicalTypes.Parsing
 
         public static ICharParser<string> BuildRegexToStringParser(string regexStr, string errorMessage)
         {
-            return CharParserBuilder.ParseConvert
+            return ParseConvert
             (
-                CharParserBuilder.ParseFromRegex
+                ParseFromRegex
                 (
                     new Regex(regexStr, RegexOptions.Compiled | RegexOptions.ExplicitCapture),
                     errorMessage
@@ -195,25 +195,25 @@ namespace CanonicalTypes.Parsing
 
         private static ICharParser<Datum> BuildParseDatum()
         {
-            ICharParser<Datum> parseDatum = CharParserBuilder.GetParseVariable<Datum>();
+            ICharParser<Datum> parseDatum = GetParseVariable<Datum>();
 
-            ICharParser<Datum> p0 = CharParserBuilder.ParseAlternatives
+            ICharParser<Datum> p0 = ParseAlternatives
             (
                 new ICharParser<Datum>[]
                 {
                     ParseNull,
                     ParseFalse,
                     ParseTrue,
-                    CharParserBuilder.ParseConvert(ParseString, s => (Datum)(new StringDatum(s)), null),
-                    CharParserBuilder.ParseConvert(ParseBigRational, r => (Datum)(new RationalDatum(r)), null),
-                    CharParserBuilder.ParseConvert(ParseBigInteger, b => (Datum)(new IntDatum(b)), null),
-                    CharParserBuilder.ParseConvert(ParseDouble, d => (Datum)(new FloatDatum(d)), null),
-                    CharParserBuilder.ParseConvert(ParseSymbol, s => (Datum)(new SymbolDatum(s)), null),
-                    CharParserBuilder.ParseConvert(ParseChar, c => (Datum)(new CharDatum(c)), null),
-                    CharParserBuilder.ParseConvert(ParseGuid, g => (Datum)(new GuidDatum(g)), null),
-                    CharParserBuilder.ParseConvert(BuildListParser(parseDatum), lst => (Datum)(new ListDatum(lst)), null),
-                    CharParserBuilder.ParseConvert(BuildSetParser(parseDatum, SetDatum.Empty, (s, i) => s.Add(i)), s => (Datum)s, null),
-                    CharParserBuilder.ParseConvert(BuildDictionaryParser(parseDatum, parseDatum, DictionaryDatum.Empty, (d, k, v) => d.Add(k, v)), dict => (Datum)dict, null),
+                    ParseConvert(ParseString, s => (Datum)(new StringDatum(s)), null),
+                    ParseConvert(ParseBigRational, r => (Datum)(new RationalDatum(r)), null),
+                    ParseConvert(ParseBigInteger, b => (Datum)(new IntDatum(b)), null),
+                    ParseConvert(ParseDouble, d => (Datum)(new FloatDatum(d)), null),
+                    ParseConvert(ParseSymbol, s => (Datum)(new SymbolDatum(s)), null),
+                    ParseConvert(ParseChar, c => (Datum)(new CharDatum(c)), null),
+                    ParseConvert(ParseGuid, g => (Datum)(new GuidDatum(g)), null),
+                    ParseConvert(BuildListParser(parseDatum), lst => (Datum)(new ListDatum(lst)), null),
+                    ParseConvert(BuildSetParser(parseDatum, SetDatum.Empty, (s, i) => s.Add(i)), s => (Datum)s, null),
+                    ParseConvert(BuildDictionaryParser(parseDatum, parseDatum, DictionaryDatum.Empty, (d, k, v) => d.Add(k, v)), dict => (Datum)dict, null),
                 }
                 .ToImmutableList()
             )
@@ -221,7 +221,7 @@ namespace CanonicalTypes.Parsing
 
             // TODO: bytearray, mutablebox
 
-            CharParserBuilder.SetParseVariable(parseDatum, p0);
+            SetParseVariable(parseDatum, p0);
 
             return p0;
         }

@@ -14,9 +14,9 @@ namespace CanonicalTypes.Parsing
 
         private static ICharParser<Guid> BuildParseGuid()
         {
-            return CharParserBuilder.ParseTryConvert
+            return ParseTryConvert
             (
-                CharParserBuilder.ParseFromRegex
+                ParseFromRegex
                 (
                     new Regex
                     (

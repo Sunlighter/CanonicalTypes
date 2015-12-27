@@ -32,20 +32,20 @@ namespace CanonicalTypes.Parsing
                 "Failed to parse float (expt part)"
             );
 
-            return CharParserBuilder.ParseTryConvert
+            return ParseTryConvert
             (
-                CharParserBuilder.ParseSequence
+                ParseSequence
                 (
                     new ICharParser<string>[]
                     {
                         intPart,
-                        CharParserBuilder.ParseAlternatives
+                        ParseAlternatives
                         (
                             new ICharParser<string>[]
                             {
-                                CharParserBuilder.ParseConvert
+                                ParseConvert
                                 (
-                                    CharParserBuilder.ParseSequence
+                                    ParseSequence
                                     (
                                         new ICharParser<string>[]
                                         {

@@ -15,9 +15,9 @@ namespace CanonicalTypes.Parsing
 
         private static ICharParser<BigRational> BuildParseBigRational()
         {
-            return CharParserBuilder.ParseTryConvert
+            return ParseTryConvert
            (
-               CharParserBuilder.ParseFromRegex
+               ParseFromRegex
                (
                    new Regex
                    (
