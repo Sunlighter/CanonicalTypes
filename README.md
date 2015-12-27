@@ -70,7 +70,7 @@ between pipe characters, such as ``|has two spaces|``.
 
 * ``||`` is the empty symbol, the symbol whose name is the empty string.
 * All the C-style escapes are supported, as with strings.
-* You cannot escape a quote, but you can escape a pipe with ``\\|`` or a
+* You cannot escape a quote, but you can escape a pipe with ``\|`` or a
 backslash with ``\\``.
 * Hexadecimal and Unicode escapes are supported, as with strings.
 * You can escape a newline just like in a string.
@@ -153,8 +153,9 @@ followed by ``}``. A key-value pair is a ``Datum`` key, followed by ``=>``,
 followed by a ``Datum`` value, followed by ``,``. The trailing comma may be
 omitted from the last key-value pair.
 
-The result of a duplicate key is undefined. The data model allows only one
-value per key.
+The data model allows only one value per key. If a key is duplicated, one
+of the values provided for that key will be selected in a manner which is
+implementation-defined.
 
 ## Mutable Box
 (Coming soon)
