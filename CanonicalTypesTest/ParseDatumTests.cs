@@ -561,5 +561,46 @@ namespace CanonicalTypesTest
 
             Assert.AreEqual("{ success, pos = 0, len = 25, value = True }", formatBoolResult(result));
         }
+
+        [TestMethod]
+        public void ParseQuasiQuoteUnquote()
+        {
+            Datum d = new ListDatum
+            (
+                ImmutableList<Datum>.Empty
+                .Add(new SymbolDatum("quasiquote"))
+                .Add
+                (
+                    new ListDatum
+                    (
+                        ImmutableList<Datum>.Empty
+                        .Add(new SymbolDatum("a"))
+                        .Add(new SymbolDatum("b"))
+                        .Add
+                        (
+                            new ListDatum
+                            (
+                                ImmutableList<Datum>.Empty
+                                .Add(new SymbolDatum("unquote"))
+                                .Add(new SymbolDatum("x"))
+                            )
+                        )
+                    )
+                )
+            );
+
+            var result = CharParserContext.TryParse
+            (
+                Parser.ParseConvert
+                (
+                    Parser.ParseDatum,
+                    a => DatumEqualityComparer.Instance.Equals(a, d),
+                    null
+                ),
+                " `(a b ,x)"
+            );
+
+            Assert.AreEqual("{ success, pos = 0, len = 10, value = True }", formatBoolResult(result));
+        }
     }
 }

@@ -191,6 +191,27 @@ namespace CanonicalTypes.Parsing
             );
         }
 
+        public static ICharParser<Datum> BuildQuoteLikeParser(ICharParser<Datum> item, string token, string quoteSymbolName)
+        {
+            return ParseConvert
+            (
+                ParseSequence
+                (
+                    new ICharParser<object>[]
+                    {
+                        Token(token),
+                        ParseConvert(item, d => (object)d, null),
+                    }
+                    .ToImmutableList()
+                ),
+                list =>
+                {
+                    return (Datum)(new ListDatum(ImmutableList<Datum>.Empty.Add(new SymbolDatum(quoteSymbolName)).Add((Datum)list[1])));
+                },
+                "Failed to convert " + quoteSymbolName
+            );
+        }
+
         private static Lazy<ICharParser<Datum>> parseDatum = new Lazy<ICharParser<Datum>>(BuildParseDatum, LazyThreadSafetyMode.ExecutionAndPublication);
 
         private static ICharParser<Datum> BuildParseDatum()
@@ -212,6 +233,10 @@ namespace CanonicalTypes.Parsing
                     ParseConvert(ParseChar, c => (Datum)(new CharDatum(c)), null),
                     ParseConvert(ParseGuid, g => (Datum)(new GuidDatum(g)), null),
                     ParseConvert(ParseByteArray, b => (Datum)(new ByteArrayDatum(b)), null),
+                    BuildQuoteLikeParser(parseDatum, "'", "quote"),
+                    BuildQuoteLikeParser(parseDatum, "`", "quasiquote"),
+                    BuildQuoteLikeParser(parseDatum, ",", "unquote"),
+                    BuildQuoteLikeParser(parseDatum, ",@", "unquote-splicing"),
                     ParseConvert(BuildListParser(parseDatum), lst => (Datum)(new ListDatum(lst)), null),
                     ParseConvert(BuildSetParser(parseDatum, SetDatum.Empty, (s, i) => s.Add(i)), s => (Datum)s, null),
                     ParseConvert(BuildDictionaryParser(parseDatum, parseDatum, DictionaryDatum.Empty, (d, k, v) => d.Add(k, v)), dict => (Datum)dict, null),
