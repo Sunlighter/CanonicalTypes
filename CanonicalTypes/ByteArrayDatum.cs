@@ -11,7 +11,7 @@ namespace CanonicalTypes
     {
         private ImmutableArray<byte> bytes;
 
-        private ByteArrayDatum(ImmutableArray<byte> bytes)
+        public ByteArrayDatum(ImmutableArray<byte> bytes)
         {
             this.bytes = bytes;
         }

@@ -211,6 +211,7 @@ namespace CanonicalTypes.Parsing
                     ParseConvert(ParseSymbol, s => (Datum)(new SymbolDatum(s)), null),
                     ParseConvert(ParseChar, c => (Datum)(new CharDatum(c)), null),
                     ParseConvert(ParseGuid, g => (Datum)(new GuidDatum(g)), null),
+                    ParseConvert(ParseByteArray, b => (Datum)(new ByteArrayDatum(b)), null),
                     ParseConvert(BuildListParser(parseDatum), lst => (Datum)(new ListDatum(lst)), null),
                     ParseConvert(BuildSetParser(parseDatum, SetDatum.Empty, (s, i) => s.Add(i)), s => (Datum)s, null),
                     ParseConvert(BuildDictionaryParser(parseDatum, parseDatum, DictionaryDatum.Empty, (d, k, v) => d.Add(k, v)), dict => (Datum)dict, null),
@@ -219,7 +220,7 @@ namespace CanonicalTypes.Parsing
             )
             .WithOptionalLeadingWhiteSpace();
 
-            // TODO: bytearray, mutablebox
+            // TODO: mutablebox
 
             SetParseVariable(parseDatum, p0);
 

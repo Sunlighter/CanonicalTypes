@@ -67,6 +67,7 @@
     <Compile Include="NullDatum.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="Parsing\CharParserContext.cs" />
+    <Compile Include="Parsing\ParseByteArray.cs" />
     <Compile Include="Parsing\ParserPrimitives.cs" />
     <Compile Include="Parsing\Extensions.cs" />
     <Compile Include="Parsing\ICharParser.cs" />

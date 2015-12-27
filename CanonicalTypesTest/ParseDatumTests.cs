@@ -4,6 +4,7 @@ using CanonicalTypes.Parsing;
 using CanonicalTypes;
 using System.Collections.Immutable;
 using System.Numerics;
+using System.Linq;
 
 namespace CanonicalTypesTest
 {
@@ -537,6 +538,28 @@ namespace CanonicalTypesTest
             );
 
             Assert.AreEqual("{ success, pos = 0, len = 40, value = True }", formatBoolResult(result));
+        }
+
+        [TestMethod]
+        public void ParseByteArray()
+        {
+            byte[] b = new byte[]
+            {
+                0xFE, 0x12, 0x3A, 0x4B, 0x79, 0x18, 0x02, 0xA3
+            };
+
+            var result = CharParserContext.TryParse
+            (
+                Parser.ParseConvert
+                (
+                    Parser.ParseByteArray,
+                    a => a.Length == 8 && Enumerable.Range(0, 8).All(i => a[i] == b[i]),
+                    null
+                ),
+                "#y(FE12 3A4B [1879] 02A3)"
+            );
+
+            Assert.AreEqual("{ success, pos = 0, len = 25, value = True }", formatBoolResult(result));
         }
     }
 }
