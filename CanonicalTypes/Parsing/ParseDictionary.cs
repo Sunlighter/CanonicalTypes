@@ -21,13 +21,9 @@ namespace CanonicalTypes.Parsing
             (
                 ParseSequence
                 (
-                    new ICharParser<object>[]
-                    {
-                        keyParser.ResultToObject(),
-                        Token("=>"),
-                        valueParser.ResultToObject(),
-                    }
-                    .ToImmutableList()
+                    keyParser.ResultToObject(),
+                    Token("=>"),
+                    valueParser.ResultToObject()
                 ),
                 objs => new Tuple<TKey, TValue>((TKey)objs[0], (TValue)objs[2]),
                 null
@@ -35,39 +31,31 @@ namespace CanonicalTypes.Parsing
 
             var dict = ParseSequence
             (
-                new ICharParser<object>[]
-                {
-                    Token("{"),
-                    ParseOptRep
+                Token("{"),
+                ParseOptRep
+                (
+                    ParseConvert
                     (
-                        ParseConvert
+                        ParseSequence
                         (
-                            ParseSequence
-                            (
-                                new ICharParser<object>[]
-                                {
-                                    kvp.ResultToObject(),
-                                    Token(",")
-                                }
-                                .ToImmutableList()
-                            ),
-                            lst => (Tuple<TKey, TValue>)lst[0],
-                            null
+                            kvp.ResultToObject(),
+                            Token(",")
                         ),
-                        true,
-                        true
-                    )
-                    .ResultToObject(),
-                    ParseOptRep
-                    (
-                        kvp,
-                        true,
-                        false
-                    )
-                    .ResultToObject(),
-                    Token("}"),
-                }
-                .ToImmutableList()
+                        lst => (Tuple<TKey, TValue>)lst[0],
+                        null
+                    ),
+                    true,
+                    true
+                )
+                .ResultToObject(),
+                ParseOptRep
+                (
+                    kvp,
+                    true,
+                    false
+                )
+                .ResultToObject(),
+                Token("}")
             );
 
             return ParseConvert

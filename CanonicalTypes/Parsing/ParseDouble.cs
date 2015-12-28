@@ -36,35 +36,22 @@ namespace CanonicalTypes.Parsing
             (
                 ParseSequence
                 (
-                    new ICharParser<string>[]
-                    {
-                        intPart,
-                        ParseAlternatives
+                    intPart,
+                    ParseAlternatives
+                    (
+                        ParseConvert
                         (
-                            new ICharParser<string>[]
-                            {
-                                ParseConvert
-                                (
-                                    ParseSequence
-                                    (
-                                        new ICharParser<string>[]
-                                        {
-                                            fracPart,
-                                            exptPart,
-                                        }
-                                        .ToImmutableList()
-                                    ),
-                                    list => string.Join(string.Empty, list),
-                                    "Failed to parse float (frac expt sequence)"
-                                ),
+                            ParseSequence
+                            (
                                 fracPart,
-                                exptPart,
-                            }
-                            .ToImmutableList()
-                        )
-                    }
-                    .ToImmutableList()
-
+                                exptPart
+                            ),
+                            list => string.Join(string.Empty, list),
+                            "Failed to parse float (frac expt sequence)"
+                        ),
+                        fracPart,
+                        exptPart
+                    )
                 ),
                 list2 =>
                 {

@@ -602,5 +602,32 @@ namespace CanonicalTypesTest
 
             Assert.AreEqual("{ success, pos = 0, len = 10, value = True }", formatBoolResult(result));
         }
+
+        [TestMethod]
+        public void ParseMutableBoxes()
+        {
+            var d1 = CharParserContext.TryParse
+            (
+                Parser.ParseDatumWithBoxes,
+                "#b[1]=(1 2 #b[2]=(3 4 #b[3]=(5 6 #b[1])))"
+            );
+
+            // unfortunately, you have to use the debugger to see if this is parsed correctly.
+
+            if (d1 is ParseSuccess<Datum>)
+            {
+                byte[] b0 = ((ParseSuccess<Datum>)d1).Value.SerializeToBytes();
+
+                Datum d3 = b0.DeserializeToDatum();
+
+                byte[] b1 = d3.SerializeToBytes();
+
+                Assert.IsTrue(b0.Length == b1.Length && Enumerable.Range(0, b0.Length).All(i => b0[i] == b1[i]));
+            }
+            else
+            {
+                Assert.Fail("Parsing failed");
+            }
+        }
     }
 }

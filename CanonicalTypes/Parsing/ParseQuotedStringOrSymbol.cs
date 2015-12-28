@@ -133,34 +133,26 @@ namespace CanonicalTypes.Parsing
             (
                 ParseSequence
                 (
-                    new ICharParser<object>[]
-                    {
-                        quote,
-                        ParseConvert
+                    quote,
+                    ParseConvert
+                    (
+                        ParseOptRep
                         (
-                            ParseOptRep
+                            ParseAlternatives
                             (
-                                ParseAlternatives
-                                (
-                                    new ICharParser<string>[]
-                                    {
-                                        stringChars,
-                                        BuildOneCharEscape(stringNotSymbol, localEscapeChars),
-                                        ParseConvert(NewlineEscape, str => string.Empty, "Failed to parse newline escape"),
-                                        hexEscape.Value,
-                                        unicodeEscape.Value
-                                    }
-                                    .ToImmutableList()
-                                ),
-                                true,
-                                true
+                                stringChars,
+                                BuildOneCharEscape(stringNotSymbol, localEscapeChars),
+                                ParseConvert(NewlineEscape, str => string.Empty, "Failed to parse newline escape"),
+                                hexEscape.Value,
+                                unicodeEscape.Value
                             ),
-                            list => (object)(string.Join(string.Empty, list)),
-                            "Failed to parse " + (stringNotSymbol ? "string" : "symbol") + " parts"
+                            true,
+                            true
                         ),
-                        quote,
-                    }
-                    .ToImmutableList()
+                        list => (object)(string.Join(string.Empty, list)),
+                        "Failed to parse " + (stringNotSymbol ? "string" : "symbol") + " parts"
+                    ),
+                    quote
                 ),
                 listobj => (string)(listobj[1]),
                 "Failed to parse " + (stringNotSymbol ? "string" : "symbol")
@@ -181,12 +173,8 @@ namespace CanonicalTypes.Parsing
         {
             return ParseAlternatives
             (
-                new ICharParser<string>[]
-                {
-                    ParseUnquotedSymbol,
-                    ParseQuotedSymbol
-                }
-                .ToImmutableList()
+                ParseUnquotedSymbol,
+                ParseQuotedSymbol
             );
         }
 

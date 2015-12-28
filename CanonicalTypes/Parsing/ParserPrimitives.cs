@@ -241,6 +241,11 @@ namespace CanonicalTypes.Parsing
             return new CharParserSequence<T>(subParsers);
         }
 
+        public static ICharParser<ImmutableList<T>> ParseSequence<T>(params ICharParser<T>[] subParsers)
+        {
+            return new CharParserSequence<T>(subParsers.ToImmutableList());
+        }
+
         private class CharParserAlternatives<T> : ICharParser<T>
         {
             private ImmutableList<ICharParser<T>> subParsers;
@@ -288,6 +293,11 @@ namespace CanonicalTypes.Parsing
         public static ICharParser<T> ParseAlternatives<T>(ImmutableList<ICharParser<T>> subParsers)
         {
             return new CharParserAlternatives<T>(subParsers);
+        }
+
+        public static ICharParser<T> ParseAlternatives<T>(params ICharParser<T>[] subParsers)
+        {
+            return new CharParserAlternatives<T>(subParsers.ToImmutableList());
         }
 
         private class CharParserFromRegex : ICharParser<Match>

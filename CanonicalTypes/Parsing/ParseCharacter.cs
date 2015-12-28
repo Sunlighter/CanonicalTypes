@@ -137,13 +137,9 @@ namespace CanonicalTypes.Parsing
         {
             return ParseAlternatives
             (
-                new ICharParser<char>[]
-                {
-                    ParseNamedChar,
-                    ParseHexChar,
-                    ParseLiteralChar,
-                }
-                .ToImmutableList()
+                ParseNamedChar,
+                ParseHexChar,
+                ParseLiteralChar
             );
         }
 

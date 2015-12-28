@@ -41,16 +41,13 @@ namespace CanonicalTypes.Parsing
             (
                 ParseSequence
                 (
-                    new[]
-                    {
-                        ParseConvert
-                        (
-                            ParseOptionalWhiteSpace,
-                            _ => default(T),
-                            null
-                        ),
-                        parser
-                    }.ToImmutableList()
+                    ParseConvert
+                    (
+                        ParseOptionalWhiteSpace,
+                        _ => default(T),
+                        null
+                    ),
+                    parser
                 ),
                 lst => lst[1],
                 null
@@ -164,13 +161,9 @@ namespace CanonicalTypes.Parsing
             (
                 ParseSequence
                 (
-                    new ICharParser<object>[]
-                    {
-                        Token("("),
-                        ParseOptRep(itemParser.WithOptionalLeadingWhiteSpace(), true, true).ResultToObject(),
-                        Token(")"),
-                    }
-                    .ToImmutableList()
+                    Token("("),
+                    ParseOptRep(itemParser.WithOptionalLeadingWhiteSpace(), true, true).ResultToObject(),
+                    Token(")")
                 ),
                 objs => (ImmutableList<T>)(objs[1]),
                 null
@@ -197,12 +190,8 @@ namespace CanonicalTypes.Parsing
             (
                 ParseSequence
                 (
-                    new ICharParser<object>[]
-                    {
-                        Token(token),
-                        ParseConvert(item, d => (object)d, null),
-                    }
-                    .ToImmutableList()
+                    Token(token),
+                    ParseConvert(item, d => (object)d, null)
                 ),
                 list =>
                 {
@@ -220,32 +209,26 @@ namespace CanonicalTypes.Parsing
 
             ICharParser<Datum> p0 = ParseAlternatives
             (
-                new ICharParser<Datum>[]
-                {
-                    ParseNull,
-                    ParseFalse,
-                    ParseTrue,
-                    ParseConvert(ParseString, s => (Datum)(new StringDatum(s)), null),
-                    ParseConvert(ParseBigRational, r => (Datum)(new RationalDatum(r)), null),
-                    ParseConvert(ParseBigInteger, b => (Datum)(new IntDatum(b)), null),
-                    ParseConvert(ParseDouble, d => (Datum)(new FloatDatum(d)), null),
-                    ParseConvert(ParseSymbol, s => (Datum)(new SymbolDatum(s)), null),
-                    ParseConvert(ParseChar, c => (Datum)(new CharDatum(c)), null),
-                    ParseConvert(ParseGuid, g => (Datum)(new GuidDatum(g)), null),
-                    ParseConvert(ParseByteArray, b => (Datum)(new ByteArrayDatum(b)), null),
-                    BuildQuoteLikeParser(parseDatum, "'", "quote"),
-                    BuildQuoteLikeParser(parseDatum, "`", "quasiquote"),
-                    BuildQuoteLikeParser(parseDatum, ",", "unquote"),
-                    BuildQuoteLikeParser(parseDatum, ",@", "unquote-splicing"),
-                    ParseConvert(BuildListParser(parseDatum), lst => (Datum)(new ListDatum(lst)), null),
-                    ParseConvert(BuildSetParser(parseDatum, SetDatum.Empty, (s, i) => s.Add(i)), s => (Datum)s, null),
-                    ParseConvert(BuildDictionaryParser(parseDatum, parseDatum, DictionaryDatum.Empty, (d, k, v) => d.Add(k, v)), dict => (Datum)dict, null),
-                }
-                .ToImmutableList()
+                ParseNull,
+                ParseFalse,
+                ParseTrue,
+                ParseConvert(ParseString, s => (Datum)(new StringDatum(s)), null),
+                ParseConvert(ParseBigRational, r => (Datum)(new RationalDatum(r)), null),
+                ParseConvert(ParseBigInteger, b => (Datum)(new IntDatum(b)), null),
+                ParseConvert(ParseDouble, d => (Datum)(new FloatDatum(d)), null),
+                ParseConvert(ParseSymbol, s => (Datum)(new SymbolDatum(s)), null),
+                ParseConvert(ParseChar, c => (Datum)(new CharDatum(c)), null),
+                ParseConvert(ParseGuid, g => (Datum)(new GuidDatum(g)), null),
+                ParseConvert(ParseByteArray, b => (Datum)(new ByteArrayDatum(b)), null),
+                BuildQuoteLikeParser(parseDatum, "'", "quote"),
+                BuildQuoteLikeParser(parseDatum, "`", "quasiquote"),
+                BuildQuoteLikeParser(parseDatum, ",", "unquote"),
+                BuildQuoteLikeParser(parseDatum, ",@", "unquote-splicing"),
+                ParseConvert(BuildListParser(parseDatum), lst => (Datum)(new ListDatum(lst)), null),
+                ParseConvert(BuildSetParser(parseDatum, SetDatum.Empty, (s, i) => s.Add(i)), s => (Datum)s, null),
+                ParseConvert(BuildDictionaryParser(parseDatum, parseDatum, DictionaryDatum.Empty, (d, k, v) => d.Add(k, v)), dict => (Datum)dict, null)
             )
             .WithOptionalLeadingWhiteSpace();
-
-            // TODO: mutablebox
 
             SetParseVariable(parseDatum, p0);
 

@@ -45,65 +45,57 @@ namespace CanonicalTypes.Parsing
             (
                 ParseSequence
                 (
-                    new ICharParser<object>[]
-                    {
-                        Token("#y("),
-                        ParseConvert
+                    Token("#y("),
+                    ParseConvert
+                    (
+                        ParseOptRep
                         (
-                            ParseOptRep
+                            ParseAlternatives
                             (
-                                ParseAlternatives
+                                ParseConvert
                                 (
-                                    new ICharParser<object>[]
-                                    {
-                                        ParseConvert
-                                        (
-                                            ParseFromRegex
-                                            (
-                                                new Regex("\\G\\s+", RegexOptions.Compiled),
-                                                "Expected white space"
-                                            ),
-                                            match => (object)DBNull.Value,
-                                            "Expected white space"
-                                        ),
-                                        ParseConvert
-                                        (
-                                            ParseFromRegex
-                                            (
-                                                new Regex("\\G([A-Fa-f0-9]{2})+", RegexOptions.Compiled | RegexOptions.ExplicitCapture),
-                                                "Expected hex digits"
-                                            ),
-                                            match =>
-                                            {
-                                                return (object)HexToBytes(match.Value, false);
-                                            },
-                                            "Expected hex digits"
-                                        ),
-                                        ParseConvert
-                                        (
-                                            ParseFromRegex
-                                            (
-                                                new Regex("\\G\\[\\s*(?<digits>([A-Fa-f0-9]{2}|\\s+)+)\\]", RegexOptions.Compiled | RegexOptions.ExplicitCapture),
-                                                "Expected bracketed hex digits"
-                                            ),
-                                            match =>
-                                            {
-                                                return (object)HexToBytes(string.Join(string.Empty, Regex.Split(match.Groups["digits"].Value, "\\s+")), true);
-                                            },
-                                            "Expected bracketed hex digits"
-                                        )
-                                    }
-                                    .ToImmutableList()
+                                    ParseFromRegex
+                                    (
+                                        new Regex("\\G\\s+", RegexOptions.Compiled),
+                                        "Expected white space"
+                                    ),
+                                    match => (object)DBNull.Value,
+                                    "Expected white space"
                                 ),
-                                true,
-                                true
+                                ParseConvert
+                                (
+                                    ParseFromRegex
+                                    (
+                                        new Regex("\\G([A-Fa-f0-9]{2})+", RegexOptions.Compiled | RegexOptions.ExplicitCapture),
+                                        "Expected hex digits"
+                                    ),
+                                    match =>
+                                    {
+                                        return (object)HexToBytes(match.Value, false);
+                                    },
+                                    "Expected hex digits"
+                                ),
+                                ParseConvert
+                                (
+                                    ParseFromRegex
+                                    (
+                                        new Regex("\\G\\[\\s*(?<digits>([A-Fa-f0-9]{2}|\\s+)+)\\]", RegexOptions.Compiled | RegexOptions.ExplicitCapture),
+                                        "Expected bracketed hex digits"
+                                    ),
+                                    match =>
+                                    {
+                                        return (object)HexToBytes(string.Join(string.Empty, Regex.Split(match.Groups["digits"].Value, "\\s+")), true);
+                                    },
+                                    "Expected bracketed hex digits"
+                                )
                             ),
-                            list => (object)(list.OfType<byte[]>().Concat()),
-                            "failed to concat byte arrays"
+                            true,
+                            true
                         ),
-                        Token(")"),
-                    }
-                    .ToImmutableList()
+                        list => (object)(list.OfType<byte[]>().Concat()),
+                        "failed to concat byte arrays"
+                    ),
+                    Token(")")
                 ),
                 seq => ImmutableArray<byte>.Empty.AddRange((byte[])seq[1]),
                 "Failed to parse byte array"
