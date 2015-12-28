@@ -20,10 +20,10 @@ dictionaries. This includes sets and dictionaries themselves. (A
 Only the identity is used for hashing and comparison.)
 
 All the data types can be serialized as binary and deserialized from
-binary. (However, the deserialization code is currently not secure, which
+binary. (The deserialization code is currently not secure, which
 means you should only deserialize trusted byte streams.) With the exception of
-*uninterned symbols,* the deserialized value will be equal to the serialized
-one.
+*uninterned symbols* and mutable boxes, the deserialized value will be equal
+to the serialized one.
 
 Here are the data types supported:
 
