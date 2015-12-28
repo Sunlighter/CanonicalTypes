@@ -124,7 +124,7 @@ An example of a byte array is ``#y(F4 2C 53 0f [3000])``. This is equivalent
 to ``#y([0F53 2CF4] 00 30)``.
 
 ## Atomic vs. Compound Types
-All the above were *atomic* data types, meaning that they do not contain
+All the above are *atomic* data types, meaning that they do not contain
 unrestricted ``Datum`` values as elements. The *compound* types include lists,
 sets, and dictionaries, and they *do* allow unrestricted ``Datum`` values as
 elements. Compound types can include other compound types as elements.
@@ -158,4 +158,16 @@ of the values provided for that key will be selected in a manner which is
 implementation-defined.
 
 ## Mutable Box
-(Coming soon)
+A mutable box must have either a *key* or a *value*, and may have both.
+The key is an integer which fits in 32 bits. Mutable boxes with the same
+key are considered the same. The value is any ``Datum`` and may include
+other mutable boxes, or the same mutable box. Every mutable box must
+be assigned a value exactly once.
+
+A mutable box with a key and a value is written as ``#b[`` (key) ``]=``
+(value). A mutable box with only a value is written as ``#b=`` (value).
+A mutable box with only a key is written as ``#b[`` (key) ``]``.
+
+As with uninterned symbols, when mutable boxes are deserialized, new
+mutable boxes with new identities are created, but they match
+one-for-one with the old mutable boxes.
