@@ -629,5 +629,15 @@ namespace CanonicalTypesTest
                 Assert.Fail("Parsing failed");
             }
         }
+
+        [TestMethod]
+        public void TestTryParse()
+        {
+            Datum d1;
+            bool success = Datum.TryParse("#f", out d1);
+
+            Assert.IsTrue(success);
+            Assert.IsTrue(d1 is BooleanDatum);
+        }
     }
 }
