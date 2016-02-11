@@ -13,5 +13,7 @@ namespace CanonicalTypes
         public override DatumType DatumType => DatumType.Null;
 
         public override T Visit<T>(IDatumVisitor<T> visitor) => visitor.VisitNull(this);
+
+        public override T Visit<T>(IDatumVisitorWithState<T> visitor, T state) => visitor.VisitNull(state, this);
     }
 }

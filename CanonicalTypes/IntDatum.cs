@@ -12,13 +12,12 @@ namespace CanonicalTypes
             this.value = value;
         }
 
-        public BigInteger Value { get { return value; } }
+        public BigInteger Value => value;
 
-        public override DatumType DatumType { get { return DatumType.Int; } }
+        public override DatumType DatumType => DatumType.Int;
 
-        public override T Visit<T>(IDatumVisitor<T> visitor)
-        {
-            return visitor.VisitInt(this);
-        }
+        public override T Visit<T>(IDatumVisitor<T> visitor) => visitor.VisitInt(this);
+
+        public override T Visit<T>(IDatumVisitorWithState<T> visitor, T state) => visitor.VisitInt(state, this);
     }
 }

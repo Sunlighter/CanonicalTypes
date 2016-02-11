@@ -42,12 +42,11 @@ namespace CanonicalTypes
 
         public ImmutableSortedDictionary<Datum, Datum> Values { get { return dict; } }
 
-        public override DatumType DatumType { get { return DatumType.Dictionary; } }
+        public override DatumType DatumType => DatumType.Dictionary;
 
-        public override T Visit<T>(IDatumVisitor<T> visitor)
-        {
-            return visitor.VisitDictionary(this);
-        }
+        public override T Visit<T>(IDatumVisitor<T> visitor) => visitor.VisitDictionary(this);
+
+        public override T Visit<T>(IDatumVisitorWithState<T> visitor, T state) => visitor.VisitDictionary(state, this);
 
         public bool ContainsKey(Datum d)
         {

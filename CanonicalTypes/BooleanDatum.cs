@@ -19,13 +19,12 @@ namespace CanonicalTypes
 
         public static BooleanDatum FromBoolean(bool value) => (value ? True : False);
 
-        public bool Value { get { return value; } }
+        public bool Value => value;
 
-        public override DatumType DatumType { get { return DatumType.Boolean; } }
+        public override DatumType DatumType => DatumType.Boolean;
 
-        public override T Visit<T>(IDatumVisitor<T> visitor)
-        {
-            return visitor.VisitBoolean(this);
-        }
+        public override T Visit<T>(IDatumVisitor<T> visitor) => visitor.VisitBoolean(this);
+
+        public override T Visit<T>(IDatumVisitorWithState<T> visitor, T state) => visitor.VisitBoolean(state, this);
     }
 }

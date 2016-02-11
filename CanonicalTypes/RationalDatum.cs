@@ -20,5 +20,7 @@ namespace CanonicalTypes
         public override DatumType DatumType => DatumType.Rational;
 
         public override T Visit<T>(IDatumVisitor<T> visitor) => visitor.VisitRational(this);
+
+        public override T Visit<T>(IDatumVisitorWithState<T> visitor, T state) => visitor.VisitRational(state, this);
     }
 }

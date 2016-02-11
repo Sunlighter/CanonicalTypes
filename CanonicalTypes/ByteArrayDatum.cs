@@ -32,11 +32,10 @@ namespace CanonicalTypes
             get { return bytes[index]; }
         }
 
-        public override DatumType DatumType { get { return DatumType.ByteArray; } }
+        public override DatumType DatumType => DatumType.ByteArray;
 
-        public override T Visit<T>(IDatumVisitor<T> visitor)
-        {
-            return visitor.VisitByteArray(this);
-        }
+        public override T Visit<T>(IDatumVisitor<T> visitor) => visitor.VisitByteArray(this);
+
+        public override T Visit<T>(IDatumVisitorWithState<T> visitor, T state) => visitor.VisitByteArray(state, this);
     }
 }

@@ -9,6 +9,8 @@ namespace CanonicalTypes
 
         public abstract T Visit<T>(IDatumVisitor<T> visitor);
 
+        public abstract T Visit<T>(IDatumVisitorWithState<T> visitor, T state);
+
         public static bool TryParse(string str, out Datum d)
         {
             ICharParser<Datum> parser = Parser.ParseConvert
@@ -35,6 +37,12 @@ namespace CanonicalTypes
             
             d = null;
             return false;
+        }
+
+        public override string ToString()
+        {
+            DatumToStringVisitor dsv = new DatumToStringVisitor();
+            return Visit(dsv);
         }
     }
 }

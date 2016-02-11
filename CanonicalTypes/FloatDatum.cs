@@ -13,11 +13,10 @@ namespace CanonicalTypes
 
         public double Value { get { return value; } }
 
-        public override DatumType DatumType { get { return DatumType.Float; } }
+        public override DatumType DatumType => DatumType.Float;
 
-        public override T Visit<T>(IDatumVisitor<T> visitor)
-        {
-            return visitor.VisitFloat(this);
-        }
+        public override T Visit<T>(IDatumVisitor<T> visitor) => visitor.VisitFloat(this);
+
+        public override T Visit<T>(IDatumVisitorWithState<T> visitor, T state) => visitor.VisitFloat(state, this);
     }
 }

@@ -20,6 +20,8 @@ namespace CanonicalTypes
 
         public override T Visit<T>(IDatumVisitor<T> visitor) => visitor.VisitList(this);
 
+        public override T Visit<T>(IDatumVisitorWithState<T> visitor, T state) => visitor.VisitList(state, this);
+
         private static ListDatum empty = new ListDatum(ImmutableList<Datum>.Empty);
 
         public static ListDatum Empty => empty;

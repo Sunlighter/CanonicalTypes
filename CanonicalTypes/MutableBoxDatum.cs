@@ -31,7 +31,7 @@ namespace CanonicalTypes
             this.content = content;
         }
 
-        public long ID { get { return id; } }
+        public long ID => id;
 
         public Datum Content
         {
@@ -39,14 +39,10 @@ namespace CanonicalTypes
             set { content = value; }
         }
 
-        public override DatumType DatumType
-        {
-            get { return DatumType.MutableBox; }
-        }
+        public override DatumType DatumType => DatumType.MutableBox;
 
-        public override T Visit<T>(IDatumVisitor<T> visitor)
-        {
-            return visitor.VisitMutableBox(this);
-        }
+        public override T Visit<T>(IDatumVisitor<T> visitor) => visitor.VisitMutableBox(this);
+
+        public override T Visit<T>(IDatumVisitorWithState<T> visitor, T state) => visitor.VisitMutableBox(state, this);
     }
 }

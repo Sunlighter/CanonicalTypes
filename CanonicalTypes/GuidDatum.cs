@@ -20,5 +20,7 @@ namespace CanonicalTypes
         public override DatumType DatumType => DatumType.Guid;
 
         public override T Visit<T>(IDatumVisitor<T> visitor) => visitor.VisitGuid(this);
+
+        public override T Visit<T>(IDatumVisitorWithState<T> visitor, T state) => visitor.VisitGuid(state, this);
     }
 }

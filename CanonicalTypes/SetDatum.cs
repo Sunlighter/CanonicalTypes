@@ -28,6 +28,8 @@ namespace CanonicalTypes
 
         public override T Visit<T>(IDatumVisitor<T> visitor) => visitor.VisitSet(this);
 
+        public override T Visit<T>(IDatumVisitorWithState<T> visitor, T state) => visitor.VisitSet(state, this);
+
         private static SetDatum empty = FromEnumerable(Enumerable.Empty<Datum>());
 
         public static SetDatum Empty => empty;

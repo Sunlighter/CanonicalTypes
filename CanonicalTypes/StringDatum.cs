@@ -16,5 +16,7 @@ namespace CanonicalTypes
         public override DatumType DatumType => DatumType.String;
 
         public override T Visit<T>(IDatumVisitor<T> visitor) => visitor.VisitString(this);
+
+        public override T Visit<T>(IDatumVisitorWithState<T> visitor, T state) => visitor.VisitString(state, this);
     }
 }
