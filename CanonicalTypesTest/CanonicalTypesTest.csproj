@@ -59,6 +59,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="CanonicalTypeSerializationTests.cs" />
+    <Compile Include="DatumToStringTests.cs" />
     <Compile Include="ParseDatumTests.cs" />
     <Compile Include="ParseExactTests.cs" />
     <Compile Include="ParseOptionalWsTest.cs" />

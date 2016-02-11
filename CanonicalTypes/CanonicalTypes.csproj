@@ -54,6 +54,7 @@
     <Compile Include="DatumComparer.cs" />
     <Compile Include="DatumEqualityComparer.cs" />
     <Compile Include="DatumHashStringVisitor.cs" />
+    <Compile Include="DatumToStringVisitor.cs" />
     <Compile Include="DatumType.cs" />
     <Compile Include="DictionaryDatum.cs" />
     <Compile Include="FloatDatum.cs" />
