@@ -38,11 +38,5 @@ namespace CanonicalTypes
             d = null;
             return false;
         }
-
-        public override string ToString()
-        {
-            DatumToStringVisitor dsv = new DatumToStringVisitor();
-            return Visit(dsv);
-        }
     }
 }
