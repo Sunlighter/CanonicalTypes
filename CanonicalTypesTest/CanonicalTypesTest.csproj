@@ -59,13 +59,13 @@
   </Choose>
   <ItemGroup>
     <Compile Include="CanonicalTypeSerializationTests.cs" />
-    <Compile Include="DatumToStringTests.cs" />
     <Compile Include="ParseDatumTests.cs" />
     <Compile Include="ParseExactTests.cs" />
     <Compile Include="ParseOptionalWsTest.cs" />
     <Compile Include="ParseOptRepTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuotedStringTests.cs" />
+    <Compile Include="ToStringTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CanonicalTypes\CanonicalTypes.csproj">

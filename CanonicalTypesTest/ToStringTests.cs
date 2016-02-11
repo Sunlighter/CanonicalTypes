@@ -5,10 +5,10 @@ using CanonicalTypes;
 namespace CanonicalTypesTest
 {
     [TestClass]
-    public class DatumToStringTests
+    public class ToStringTests
     {
         [TestMethod]
-        public void TestBooleanToString()
+        public void ToStringFromBoolean()
         {
             Datum d = BooleanDatum.True;
 
@@ -16,7 +16,7 @@ namespace CanonicalTypesTest
         }
 
         [TestMethod]
-        public void TestNamedCharToString()
+        public void ToStringFromNamedChar()
         {
             Datum d = new CharDatum('\r');
 
@@ -24,11 +24,27 @@ namespace CanonicalTypesTest
         }
 
         [TestMethod]
-        public void TestStringToString()
+        public void ToStringFromHexChar()
+        {
+            Datum d = new CharDatum('\xFEFF');
+
+            Assert.AreEqual("#\\xFEFF", d.ToString());
+        }
+
+        [TestMethod]
+        public void ToStringFromString()
         {
             Datum d = new StringDatum("Hello\r\n");
 
             Assert.AreEqual("\"Hello\\r\\n\"", d.ToString());
+        }
+
+        [TestMethod]
+        public void ToStringFromDouble()
+        {
+            Datum d = new FloatDatum(11.1);
+
+            Assert.AreEqual("11.1", d.ToString());
         }
     }
 }

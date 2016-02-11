@@ -41,7 +41,8 @@ namespace CanonicalTypes
 
         public override string ToString()
         {
-            DatumToStringVisitor dsv = new DatumToStringVisitor();
+            MutableBoxReferenceCollector.State state = Visit(MutableBoxReferenceCollector.Instance, MutableBoxReferenceCollector.State.Empty);
+            DatumToStringVisitor dsv = new DatumToStringVisitor(state);
             return Visit(dsv);
         }
     }
