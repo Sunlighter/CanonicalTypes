@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CanonicalTypes;
+using System.Collections.Immutable;
 
 namespace CanonicalTypesTest
 {
@@ -45,6 +46,14 @@ namespace CanonicalTypesTest
             Datum d = new FloatDatum(11.1);
 
             Assert.AreEqual("11.1", d.ToString());
+        }
+
+        [TestMethod]
+        public void ToStringFromByteArray()
+        {
+            Datum d = ByteArrayDatum.FromByteArray(new byte[] { 0xAB, 0xCD, 0xEF });
+
+            Assert.AreEqual("#y(ABCDEF)", d.ToString());
         }
     }
 }

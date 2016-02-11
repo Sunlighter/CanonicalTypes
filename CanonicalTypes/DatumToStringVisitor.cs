@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace CanonicalTypes
 {
-
     public class MutableBoxReferenceCollector : IDatumVisitorWithState<MutableBoxReferenceCollector.State>
     {
         private static Lazy<MutableBoxReferenceCollector> instance = new Lazy<MutableBoxReferenceCollector>(() => new MutableBoxReferenceCollector(), LazyThreadSafetyMode.ExecutionAndPublication);
@@ -193,7 +192,7 @@ namespace CanonicalTypes
 
         public string VisitByteArray(ByteArrayDatum d)
         {
-            throw new NotImplementedException();
+            return "#y(" + string.Join("", d.Bytes.Select(b => b.ToString("X2"))) + ")";
         }
 
         public string VisitSymbol(SymbolDatum d)

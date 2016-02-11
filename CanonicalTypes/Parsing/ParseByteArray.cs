@@ -40,7 +40,6 @@ namespace CanonicalTypes.Parsing
 
         private static ICharParser<ImmutableArray<byte>> BuildParseByteArray()
         {
-            
             return ParseConvert
             (
                 ParseSequence
