@@ -36,13 +36,14 @@ The boolean data are written as ``#t`` for true, or ``#f`` for false.
 ## Character
 Right now a character is only 16 bits, which means that some Unicode code
 points have to be encoded with surrogate pairs. The character data type is
-only able to represent half of a surrogate pair.
+able to represent only half of a surrogate pair.
 
 There are three ways to write characters.
 
 * A literal character. For example, ``C`` can be written as ``#\C``.
 * A named character, such as ``#\newline`` or ``#\space``. Character names are
-case-sensitive.
+case-sensitive. The named characters are ``#\bel``, ``#\backspace``,
+``#\tab``, ``#\newline``, ``#\vt``, ``#\page``, and ``#\return``.
 * A hex character. For example, the escape character would be ``#\x1B``, and
 the non-breaking zero-width space (which is used by Unicode as a byte-order
 mark) would be ``#\xFEFF``. Hex digits are case-insensitive.
@@ -56,7 +57,7 @@ for newline. So ``"\t"`` is a string consisting of a single tab character.
 * You can escape a quote with ``\"`` or a backslash with ``\\``.
 * Hexadecimal escapes, such as ``\x1B`` for the escape character, are
 supported, but must use exactly two hex digits. Unicode escapes such as
-``\UFEFF`` are supported, but must use exactly four hex digits.
+``\uFEFF`` are supported, but must use exactly four hex digits.
 * You can escape a newline to omit it from the string and continue the string
 on the next line.
 
@@ -112,8 +113,8 @@ case-insensitive.
 ## Byte Array
 A byte array is written as ``#y(``, followed by a sequence of hexadecimal
 bytes, followed by ``)``. Each hexadecimal byte must consist of exactly two
-hex digits. Hex digits are case-insensitive. Whitespace is allowed between
-bytes.
+hex digits. Hex digits are case-insensitive. Whitespace is allowed (but not
+required) between bytes.
 
 As a convenience, it is also possible to put bytes in square brackets; this
 causes the order of the bytes in the brackets to be reversed, and is useful
@@ -153,9 +154,11 @@ followed by ``}``. A key-value pair is a ``Datum`` key, followed by ``=>``,
 followed by a ``Datum`` value, followed by ``,``. The trailing comma may be
 omitted from the last key-value pair.
 
-The data model allows only one value per key. If a key is duplicated, one
-of the values provided for that key will be selected in a manner which is
-implementation-defined.
+The data model allows only one value per key. If a duplicate key is found
+when parsing input, the behavior is implementation-defined, but must be
+either that one of the duplicate key-value pairs is chosen arbitrarily for
+inclusion in the dictionary and the others are ignored, or that an error
+is signaled.
 
 ## Mutable Box
 A mutable box must have either a *key* or a *value*, and may have both.
