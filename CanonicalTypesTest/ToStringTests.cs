@@ -102,5 +102,21 @@ namespace CanonicalTypesTest
 
             Assert.AreEqual("#b[1]=(#b=\"hello\" #f #b[1])", d.ToString());
         }
+
+        [TestMethod]
+        public void ToStringFromSymbols()
+        {
+            Datum d = new ListDatum
+            (
+                new Datum[]
+                {
+                    new SymbolDatum("ImASymbol"),
+                    new SymbolDatum("me too")
+                }
+                .ToImmutableList()
+            );
+
+            Assert.AreEqual("(ImASymbol |me too|)", d.ToString());
+        }
     }
 }

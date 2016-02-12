@@ -38,5 +38,23 @@ namespace CanonicalTypes.Parsing
         }
 
         public static ICharParser<string> ParseUnquotedSymbol => parseUnquotedSymbol.Value;
+
+        private static Lazy<ICharParser<string>> parseUnquotedSymbolThenEof = new Lazy<ICharParser<string>>(BuildParseUnquotedSymbolThenEof, LazyThreadSafetyMode.ExecutionAndPublication);
+
+        private static ICharParser<string> BuildParseUnquotedSymbolThenEof()
+        {
+            return ParseConvert
+            (
+                ParseSequence<object>
+                (
+                    ParseUnquotedSymbol.ResultToObject(),
+                    ParseEOF.ResultToObject()
+                ),
+                lst => (string)(lst[0]),
+                "Failed to parse unquoted symbol"
+            );
+        }
+
+        public static ICharParser<string> ParseUnquotedSymbolThenEof => parseUnquotedSymbolThenEof.Value;
     }
 }

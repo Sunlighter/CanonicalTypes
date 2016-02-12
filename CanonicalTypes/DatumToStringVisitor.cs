@@ -199,22 +199,37 @@ namespace CanonicalTypes
 
         public string VisitSymbol(SymbolDatum d)
         {
-            throw new NotImplementedException();
+            if (d.IsInterned)
+            {
+                var result = CharParserContext.TryParse(Parser.ParseUnquotedSymbolThenEof, d.Name);
+                if (result is ParseSuccess<string>)
+                {
+                    return d.Name;
+                }
+                else
+                {
+                    return d.Name.SymbolQuoted();
+                }
+            }
+            else
+            {
+                return "g$" + d.ID;
+            }
         }
 
         public string VisitList(ListDatum d)
         {
-            return "(" + string.Join(" ", d.Values.Select(i => i.Visit(this))) + ")";
+            return "(" + string.Join(" ", d.Select(i => i.Visit(this))) + ")";
         }
 
         public string VisitSet(SetDatum d)
         {
-            throw new NotImplementedException();
+            return "#s{" + string.Join(" ", d.Select(i => i.Visit(this))) + "}";
         }
 
         public string VisitDictionary(DictionaryDatum d)
         {
-            throw new NotImplementedException();
+            return "{" + string.Join(", ", d.Select(kvp => kvp.Key.Visit(this) + " => " + kvp.Value.Visit(this))) + "}";
         }
 
         public string VisitMutableBox(MutableBoxDatum d)
