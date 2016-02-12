@@ -120,10 +120,12 @@ namespace CanonicalTypes
     public class DatumToStringVisitor : IDatumVisitor<string>
     {
         MutableBoxReferenceCollector.State boxReferences;
+        SetDatum boxesStarted;
 
         public DatumToStringVisitor(MutableBoxReferenceCollector.State boxReferences)
         {
             this.boxReferences = boxReferences;
+            this.boxesStarted = SetDatum.Empty;
         }
 
         public string VisitNull(NullDatum d)
@@ -202,7 +204,7 @@ namespace CanonicalTypes
 
         public string VisitList(ListDatum d)
         {
-            throw new NotImplementedException();
+            return "(" + string.Join(" ", d.Values.Select(i => i.Visit(this))) + ")";
         }
 
         public string VisitSet(SetDatum d)
@@ -217,17 +219,33 @@ namespace CanonicalTypes
 
         public string VisitMutableBox(MutableBoxDatum d)
         {
-            throw new NotImplementedException();
+            if (boxReferences.BoxesReferenced.ContainsKey(d))
+            {
+                if (boxesStarted.Contains(d))
+                {
+                    return "#b[" + boxReferences.BoxesReferenced[d].Visit(this) + "]";
+                }
+                else
+                {
+                    boxesStarted = boxesStarted.Add(d);
+                    return "#b[" + boxReferences.BoxesReferenced[d].Visit(this) + "]=" + d.Content.Visit(this);
+                }
+                
+            }
+            else
+            {
+                return "#b=" + d.Content.Visit(this);
+            }
         }
 
         public string VisitRational(RationalDatum d)
         {
-            throw new NotImplementedException();
+            return d.Value.ToString();
         }
 
         public string VisitGuid(GuidDatum d)
         {
-            throw new NotImplementedException();
+            return "#g" + d.Value.ToString("B");
         }
     }
 }
