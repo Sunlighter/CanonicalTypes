@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("CanonicalTypes")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A library of general-purpose, immutable, serializable types")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("CanonicalTypes")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCopyright("Copyright © 2015, 2016 by Sunlighter")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
