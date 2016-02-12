@@ -38,5 +38,12 @@ namespace CanonicalTypes
             d = null;
             return false;
         }
+
+        public override string ToString()
+        {
+            MutableBoxReferenceCollector.State state = Visit(MutableBoxReferenceCollector.Instance, MutableBoxReferenceCollector.State.Empty);
+            DatumToStringVisitor dsv = new DatumToStringVisitor(state);
+            return Visit(dsv);
+        }
     }
 }
