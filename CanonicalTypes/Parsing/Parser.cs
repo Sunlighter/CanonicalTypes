@@ -222,8 +222,8 @@ namespace CanonicalTypes.Parsing
                 ParseConvert(ParseByteArray, b => (Datum)(new ByteArrayDatum(b)), null),
                 BuildQuoteLikeParser(parseDatum, "'", "quote"),
                 BuildQuoteLikeParser(parseDatum, "`", "quasiquote"),
-                BuildQuoteLikeParser(parseDatum, ",", "unquote"),
                 BuildQuoteLikeParser(parseDatum, ",@", "unquote-splicing"),
+                BuildQuoteLikeParser(parseDatum, ",", "unquote"),
                 ParseConvert(BuildListParser(parseDatum), lst => (Datum)(new ListDatum(lst)), null),
                 ParseConvert(BuildSetParser(parseDatum, SetDatum.Empty, (s, i) => s.Add(i)), s => (Datum)s, null),
                 ParseConvert(BuildDictionaryParser(parseDatum, parseDatum, DictionaryDatum.Empty, (d, k, v) => d.Add(k, v)), dict => (Datum)dict, null)

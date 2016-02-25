@@ -585,6 +585,15 @@ namespace CanonicalTypesTest
                                 .Add(new SymbolDatum("x"))
                             )
                         )
+                        .Add
+                        (
+                            new ListDatum
+                            (
+                                ImmutableList<Datum>.Empty
+                                .Add(new SymbolDatum("unquote-splicing"))
+                                .Add(new SymbolDatum("y"))
+                            )
+                        )
                     )
                 )
             );
@@ -597,10 +606,10 @@ namespace CanonicalTypesTest
                     a => DatumEqualityComparer.Instance.Equals(a, d),
                     null
                 ),
-                " `(a b ,x)"
+                " `(a b ,x ,@y)"
             );
 
-            Assert.AreEqual("{ success, pos = 0, len = 10, value = True }", formatBoolResult(result));
+            Assert.AreEqual("{ success, pos = 0, len = 14, value = True }", formatBoolResult(result));
         }
 
         [TestMethod]
