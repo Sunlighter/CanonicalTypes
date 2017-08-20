@@ -2,6 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>A library of general-purpose, immutable, serializable types</Description>
+    <Authors>Sunlighter</Authors>
+    <Version>1.0.0.2</Version>
+    <Company />
+    <Copyright>Copyright © 2015, 2016 by Sunlighter</Copyright>
+    <PackageLicenseUrl>https://github.com/Sunlighter/CanonicalTypes/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Sunlighter/CanonicalTypes</PackageProjectUrl>
+    <PackageTags>canonical, types, immutable</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
