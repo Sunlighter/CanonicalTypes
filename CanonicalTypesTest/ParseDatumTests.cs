@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CanonicalTypes.Parsing;
-using CanonicalTypes;
+using Sunlighter.CanonicalTypes.Parsing;
+using Sunlighter.CanonicalTypes;
 using System.Collections.Immutable;
 using System.Numerics;
 using System.Linq;

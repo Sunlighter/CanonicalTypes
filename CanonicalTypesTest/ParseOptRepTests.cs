@@ -2,7 +2,7 @@
 using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CanonicalTypes.Parsing;
+using Sunlighter.CanonicalTypes.Parsing;
 using System.Collections.Immutable;
 using System.Linq;
 

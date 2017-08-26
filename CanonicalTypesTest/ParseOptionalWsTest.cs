@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CanonicalTypes;
-using CanonicalTypes.Parsing;
+using Sunlighter.CanonicalTypes;
+using Sunlighter.CanonicalTypes.Parsing;
 
 namespace CanonicalTypesTest
 {

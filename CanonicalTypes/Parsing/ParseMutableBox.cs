@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CanonicalTypes.Parsing
+namespace Sunlighter.CanonicalTypes.Parsing
 {
     public static partial class Parser
     {

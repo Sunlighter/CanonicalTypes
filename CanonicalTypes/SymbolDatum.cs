@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CanonicalTypes
+namespace Sunlighter.CanonicalTypes
 {
     public class SymbolDatum : Datum
     {

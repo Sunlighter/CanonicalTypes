@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 
-namespace CanonicalTypes
+namespace Sunlighter.CanonicalTypes
 {
     public class DictionaryDatum : Datum, IEnumerable<KeyValuePair<Datum, Datum>>
     {

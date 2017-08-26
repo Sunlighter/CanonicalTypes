@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CanonicalTypes;
+using Sunlighter.CanonicalTypes;
 using System.Collections.Immutable;
 using System.Numerics;
 

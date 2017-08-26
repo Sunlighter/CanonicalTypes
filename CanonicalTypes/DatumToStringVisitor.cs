@@ -1,4 +1,4 @@
-﻿using CanonicalTypes.Parsing;
+﻿using Sunlighter.CanonicalTypes.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CanonicalTypes
+namespace Sunlighter.CanonicalTypes
 {
     public class MutableBoxReferenceCollector : IDatumVisitorWithState<MutableBoxReferenceCollector.State>
     {

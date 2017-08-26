@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace CanonicalTypes
+namespace Sunlighter.CanonicalTypes
 {
     public class IntDatum : Datum
     {

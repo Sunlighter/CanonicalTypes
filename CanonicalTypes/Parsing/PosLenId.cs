@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CanonicalTypes.Parsing
+namespace Sunlighter.CanonicalTypes.Parsing
 {
     public struct PosLenId : IEquatable<PosLenId>, IComparable<PosLenId>
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CanonicalTypes
+namespace Sunlighter.CanonicalTypes
 {
     public interface IDatumVisitor<T>
     {

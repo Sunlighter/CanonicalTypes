@@ -9,7 +9,7 @@ using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
 using System.Numerics;
 
-namespace CanonicalTypes.Parsing
+namespace Sunlighter.CanonicalTypes.Parsing
 {
     public static partial class Parser
     {

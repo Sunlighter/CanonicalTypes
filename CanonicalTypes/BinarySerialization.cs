@@ -5,7 +5,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 
-namespace CanonicalTypes
+namespace Sunlighter.CanonicalTypes
 {
     public static class BinarySerialization
     {

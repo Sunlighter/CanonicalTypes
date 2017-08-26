@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CanonicalTypes.Parsing
+namespace Sunlighter.CanonicalTypes.Parsing
 {
     public static class Extensions
     {

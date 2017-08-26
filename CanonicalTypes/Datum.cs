@@ -1,7 +1,7 @@
 ﻿using System;
-using CanonicalTypes.Parsing;
+using Sunlighter.CanonicalTypes.Parsing;
 
-namespace CanonicalTypes
+namespace Sunlighter.CanonicalTypes
 {
     public abstract class Datum
     {

@@ -1,4 +1,4 @@
-﻿using CanonicalTypes;
+﻿using Sunlighter.CanonicalTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Numerics;
 

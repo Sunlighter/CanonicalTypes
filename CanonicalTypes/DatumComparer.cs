@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
 
-namespace CanonicalTypes
+namespace Sunlighter.CanonicalTypes
 {
     public class DatumComparer : IComparer<Datum>
     {

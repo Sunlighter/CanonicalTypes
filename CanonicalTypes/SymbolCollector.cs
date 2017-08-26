@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CanonicalTypes
+namespace Sunlighter.CanonicalTypes
 {
     public class SymbolCollector : IDatumVisitor<SetDatum>
     {
