@@ -22,7 +22,7 @@ namespace Sunlighter.CanonicalTypes.Parsing
                 ParseSequence
                 (
                     keyParser.ResultToObject(),
-                    Token("=>"),
+                    Token(":"),
                     valueParser.ResultToObject()
                 ),
                 objs => new Tuple<TKey, TValue>((TKey)objs[0], (TValue)objs[2]),

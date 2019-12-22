@@ -135,10 +135,10 @@ namespace CanonicalTypesTest
                     d => DatumEqualityComparer.Instance.Equals(d, complexDictionary),
                     null
                 ),
-                " { #t => #f, #nil => 1000, (#t 1/2) => blah }"
+                " { #t: #f, #nil: 1000, (#t 1/2): blah }"
             );
 
-            Assert.AreEqual("{ success, pos = 0, len = 45, value = True }", formatBoolResult(result));
+            Assert.AreEqual("{ success, pos = 0, len = 39, value = True }", formatBoolResult(result));
         }
 
         [TestMethod]

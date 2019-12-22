@@ -57,5 +57,11 @@ namespace CanonicalTypesTest
         {
             Assert.AreEqual("{ failure, { pos = 1, message = \"Expected \\\"a\\\"\" } }", toString2(CharParserContext.TryParse(a, " B")));
         }
+
+        [TestMethod]
+        public void TestCommentA()
+        {
+            Assert.AreEqual("{ success, pos = 0, len = 24, value = \"A\" }", toString2(CharParserContext.TryParse(a, "; this is a comment\r\n  A")));
+        }
     }
 }

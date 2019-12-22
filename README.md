@@ -8,6 +8,10 @@ types.
 
 It is currently a work in progress, and so is the documentation below.
 
+(Note: **Breaking Changes** have occurred recently, so I tagged version &ldquo;1.0&rdquo; before the changes. This
+documentation covers the current version. To get the documentation for the original version, just check out the
+&ldquo;1.0&rdquo; tag.)
+
 # Data Types
 
 At runtime, all data types descend from the ``Datum`` class.
@@ -19,6 +23,8 @@ has a mutable *content* part and an immutable *identity.* Only the identity is u
 All the data types can be serialized as binary and deserialized from binary. (The deserialization code is currently
 not secure, which means you should only deserialize trusted byte streams.) With the exception of *uninterned symbols*
 and mutable boxes, the deserialized value will be equal to the serialized one.
+
+Also, they can be serialized and deserialized as text.
 
 Here are the data types supported:
 
@@ -148,8 +154,10 @@ Duplicate items in a set are ignored. The data model does not allow them.
 ## Dictionary
 
 A dictionary is written as ``{``, followed by zero or more key-value pairs, followed by ``}``. A key-value pair is a
-``Datum`` key, followed by ``=>``, followed by a ``Datum`` value, followed by ``,``. The trailing comma may be omitted
+``Datum`` key, followed by ``:``, followed by a ``Datum`` value, followed by ``,``. The trailing comma may be omitted
 from the last key-value pair.
+
+(Note, this has changed from the 1.0 version where the separator between keys and values was ``=>`` instead of ``:``.)
 
 The data model allows only one value per key. If a duplicate key is found when parsing input, the behavior is
 implementation-defined, but must be either that one of the duplicate key-value pairs is chosen arbitrarily for
@@ -166,3 +174,12 @@ written as ``#b=`` (value).  A mutable box with only a key is written as ``#b[``
 
 As with uninterned symbols, when mutable boxes are deserialized, new mutable boxes with new identities are created,
 but they match one-for-one with the old mutable boxes.
+
+## Comments
+
+Comments are now supported in data-as-text. These do not show up in the data model at all. A comment is allowed
+anywhere that insignificant whitespace is allowed.
+
+Like with Scheme and Lisp, a comment begins with ``;`` and continues to the end of the line.
+
+There is currently no form of multi-line comment.

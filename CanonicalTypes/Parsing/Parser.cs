@@ -15,20 +15,65 @@ namespace Sunlighter.CanonicalTypes.Parsing
     {
         #region Optional White Space
 
-        private static Lazy<ICharParser<Nothing>> optionalWhiteSpace = new Lazy<ICharParser<Nothing>>(BuildOptionalWhiteSpace, LazyThreadSafetyMode.ExecutionAndPublication);
+        private static Lazy<ICharParser<Nothing>> optionalWhiteSpace = new Lazy<ICharParser<Nothing>>(BuildOptionalWhiteSpaceWithComments, LazyThreadSafetyMode.ExecutionAndPublication);
 
         private static ICharParser<Nothing> BuildOptionalWhiteSpace()
         {
-            return ParseConvert
+            return ParseFromRegex
             (
+                new Regex("\\G\\s*", RegexOptions.Compiled),
+                "whitespace expected"
+            )
+            .IgnoreValue();
+        }
+
+        private static ICharParser<Nothing> BuildWhiteSpace()
+        {
+            return ParseFromRegex
+            (
+                new Regex("\\G\\s+", RegexOptions.Compiled),
+                "whitespace expected"
+            )
+            .IgnoreValue();
+        }
+
+        private static ICharParser<Nothing> BuildParseComment()
+        {
+            return ParseSequence<Nothing>
+            (
+                ParseExact(";", StringComparison.InvariantCulture).IgnoreValue(),
                 ParseFromRegex
                 (
-                    new Regex("\\G\\s*", RegexOptions.Compiled),
-                    "whitespace expected"
+                    new Regex("\\G[^\\r\\n]*", RegexOptions.Compiled),
+                    "Comment chars expected"
+                )
+                .IgnoreValue(),
+                ParseFromRegex
+                (
+                    new Regex("\\G(?:\\r\\n|\\r|\\n)", RegexOptions.Compiled),
+                    "Newline expected"
+                )
+                .IgnoreValue()
+            )
+            .IgnoreValue();
+        }
+
+        private static ICharParser<Nothing> BuildOptionalWhiteSpaceWithComments()
+        {
+            return ParseOptRep
+            (
+                ParseAlternatives
+                (
+                    new ICharParser<Nothing>[]
+                    {
+                        BuildParseComment(),
+                        BuildWhiteSpace()
+                    }
                 ),
-                m => Nothing.Value,
-                null
-            );
+                true,
+                true
+            )
+            .IgnoreValue();
         }
 
         public static ICharParser<Nothing> ParseOptionalWhiteSpace => optionalWhiteSpace.Value;
@@ -153,6 +198,11 @@ namespace Sunlighter.CanonicalTypes.Parsing
         private static ICharParser<object> Token(string tokenStr)
         {
             return ParseExact(tokenStr, StringComparison.InvariantCulture).WithOptionalLeadingWhiteSpace().ResultToObject();
+        }
+
+        private static ICharParser<Nothing> IgnoreValue<T>(this ICharParser<T> parser)
+        {
+            return ParseConvert(parser, (m => Nothing.Value), null);
         }
 
         public static ICharParser<ImmutableList<T>> BuildListParser<T>(ICharParser<T> itemParser)
