@@ -17,11 +17,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Collections.Immutable" Version="1.7.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="CompareWorkers\" />
+    <PackageReference Include="Sunlighter.OptionLib" Version="1.0.0" />
+    <PackageReference Include="System.Collections.Immutable" Version="7.0.0" />
   </ItemGroup>
 
 </Project>
