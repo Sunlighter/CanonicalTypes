@@ -14,13 +14,13 @@ namespace CanonicalTypesTest
             // nothing
         }
 
-        private TestContext testContextInstance;
+        private TestContext? testContextInstance;
 
         /// <summary>
         ///Gets or sets the test context which provides
         ///information about and functionality for the current test run.
         ///</summary>
-        public TestContext TestContext
+        public TestContext? TestContext
         {
             get
             {
@@ -57,7 +57,7 @@ namespace CanonicalTypesTest
         [TestMethod]
         public void QuotedStringNull()
         {
-            Assert.AreEqual("null", ((string)null).Quoted());
+            Assert.AreEqual("null", ((string?)null).Quoted());
         }
 
         [TestMethod]

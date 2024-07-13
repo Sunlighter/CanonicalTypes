@@ -10,13 +10,13 @@ namespace Sunlighter.CanonicalTypes.Parsing
 {
     public class CharParserContext
     {
-        private string text;
-        private ObjectIDGenerator idgen;
+        private readonly string text;
+        private readonly ObjectIDGenerator idgen;
         private ImmutableSortedDictionary<PosLenId, object> memoTable;
 
         public CharParserContext(string text)
         {
-            if (text == null) throw new ArgumentNullException("text");
+            if (text == null) throw new ArgumentNullException(nameof(text));
 
             this.text = text;
             this.idgen = new ObjectIDGenerator();

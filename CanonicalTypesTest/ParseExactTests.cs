@@ -18,9 +18,9 @@ namespace CanonicalTypesTest
             toString = Utility.GetParseResultStringConverter<string>(f => f.Quoted());
         }
 
-        private TestContext testContextInstance;
+        private TestContext? testContextInstance;
 
-        public TestContext TestContext
+        public TestContext? TestContext
         {
             get
             {

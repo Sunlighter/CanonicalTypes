@@ -11,9 +11,9 @@ namespace CanonicalTypesTest
     [TestClass]
     public class ParseOptRepTests
     {
-        private ICharParser<ImmutableList<string>> parserOpt;
-        private ICharParser<ImmutableList<string>> parserRep;
-        private ICharParser<ImmutableList<string>> parserOptRep;
+        private readonly ICharParser<ImmutableList<string>> parserOpt;
+        private readonly ICharParser<ImmutableList<string>> parserRep;
+        private readonly ICharParser<ImmutableList<string>> parserOptRep;
         private readonly Func<ParseResult<ImmutableList<string>>, string> toString;
 
         public ParseOptRepTests()
@@ -25,9 +25,9 @@ namespace CanonicalTypesTest
             toString = Utility.GetParseResultStringConverter(listToString);
         }
 
-        private TestContext testContextInstance;
+        private TestContext? testContextInstance;
 
-        public TestContext TestContext
+        public TestContext? TestContext
         {
             get
             {

@@ -1,24 +1,25 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
     <Description>A library of general-purpose, immutable, serializable types</Description>
     <Authors>Sunlighter</Authors>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Company />
-    <Copyright>Copyright © 2015, 2016, 2017 by Sunlighter</Copyright>
+    <Copyright>Copyright © 2015, 2016, 2017, 2024 by Sunlighter</Copyright>
     <PackageLicenseUrl>https://github.com/Sunlighter/CanonicalTypes/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/Sunlighter/CanonicalTypes</PackageProjectUrl>
     <PackageTags>canonical, types, immutable</PackageTags>
     <AssemblyName>Sunlighter.CanonicalTypes</AssemblyName>
     <RootNamespace>Sunlighter.CanonicalTypes</RootNamespace>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
-    <FileVersion>1.0.1.0</FileVersion>
+    <AssemblyVersion>1.0.2.0</AssemblyVersion>
+    <FileVersion>1.0.2.0</FileVersion>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Sunlighter.OptionLib" Version="1.0.0" />
-    <PackageReference Include="System.Collections.Immutable" Version="7.0.0" />
+    <PackageReference Include="System.Collections.Immutable" Version="8.0.0" />
   </ItemGroup>
 
 </Project>

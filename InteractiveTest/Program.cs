@@ -16,7 +16,7 @@ namespace InteractiveTest
                 while (true)
                 {
                     Console.Write("> ");
-                    string str = Console.ReadLine();
+                    string? str = Console.ReadLine();
                     Datum d;
                     if (Datum.TryParse(str, out d))
                     {
