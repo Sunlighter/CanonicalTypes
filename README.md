@@ -1,3 +1,4 @@
+<!-- -*- coding: utf-8; fill-column: 118 -*- -->
 # CanonicalTypes
 A C# canonical types library.
 
@@ -12,6 +13,9 @@ It is currently a work in progress, and so is the documentation below.
 documentation covers the current version. To get the documentation for the original version, just check out the
 &ldquo;1.0&rdquo; tag.)
 
+(This project has been updated for .NET 8 but also multi-targets to .NET Standard 2.0 in case compatibility with .NET
+Framework is required.)
+
 # Data Types
 
 At runtime, all data types descend from the ``Datum`` class.
@@ -21,8 +25,10 @@ used as items in sets, or keys in dictionaries. This includes sets and dictionar
 has a mutable *content* part and an immutable *identity.* Only the identity is used for hashing and comparison.)
 
 All the data types can be serialized as binary and deserialized from binary. (The deserialization code is currently
-not secure, which means you should only deserialize trusted byte streams.) With the exception of *uninterned symbols*
-and mutable boxes, the deserialized value will be equal to the serialized one.
+not secure, which means you should only deserialize trusted byte streams. The byte streams *cannot* cause the loading
+of DLLs or the creation of any non-canonical types, *but* it might be possible for a malicious byte stream to allocate
+large amounts of memory or something.) With the exception of *uninterned symbols* and mutable boxes, the deserialized
+value will be equal to the serialized one.
 
 Also, they can be serialized and deserialized as text.
 
